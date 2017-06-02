@@ -1,0 +1,20 @@
+
+> vue-demo@1.0.0 dev /root/deploy/vue-demo
+> node build/dev-server.js
+
+> Starting dev server...
+ DONE  Compiled successfully in 3989ms11:29:17 PM
+
+> Listening at http://localhost:8080
+
+(node:11177) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 1): Error: Exited with code 3
+
+> vue-demo@1.0.0 dev /root/deploy/vue-demo
+> node build/dev-server.js
+
+> Starting dev server...
+ DONE  Compiled successfully in 4131ms11:31:41 PM
+
+> Listening at http://localhost:8080
+
+(node:11316) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 1): Error: Exited with code 3
