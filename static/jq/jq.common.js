@@ -69,23 +69,24 @@ jQuery.common = {
 	},
 	
 	/* 含文件的表单提交 */
-	ajaxFileSubmit : function(elem ,_submitUrl,_isRefrush, _jumpUrl) {
+	ajaxFileSubmit : function(elem ,_submitUrl,_isRefrush, _jumpUrl, _parm) {
 		$(elem).ajaxSubmit({  
             type:'post',  
             cache: false,  
             url: _submitUrl, 
+			data : _parm,
             dataType : 'json', //返回值类型 一般设置为json  
             success : function(data, status) {  
-	        	if(data.errorNo==0){
+	        	if(data.errorNo==200){
 	        		if(_isRefrush){
 	        			self.location= _jumpUrl;
 	        		}
 				} else {
-					alert(data.errorInfo);
+					Materialize.toast(data.errorInfo, 3000);
 				}
 	        },  
 	        error : function(data, status, e) {  
-	        	alert(data.errorInfo); 
+	        	Materialize.toast(data.errorInfo, 3000);
 	        }   
         });
 	},

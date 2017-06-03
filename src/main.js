@@ -17,13 +17,16 @@ const NotFound = { template: '<p>Page not found</p>' }
 
 //全局变量
 global.BASE_URL="http://192.168.9.106:9000";
+global.BASE_IMG_URL="http://192.168.9.106:8095";
+//global.BASE_URL="http://my.springboot/";
 global.COOKIE_USERNAME="cookie_user";
 
 //Vue.use(router)
 Vue.use(VueResource);
 
 Vue.http.options.emulateJSON = true;
-Vue.http.options.xhr = { withCredentials: true };
+//Vue.http.options.xhr = { withCredentials: true };
+//Vue.http.options.credentials = true;
 
 //Vue.config.productionTip = false
 

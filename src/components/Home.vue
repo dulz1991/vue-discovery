@@ -6,7 +6,7 @@
 				
 				<div class="card" v-if="item.hasImg">
 					<div class="card-image">
-						<img :src="item.imgPath" >
+						<img :src="baseImgUrl+item.imagePath" >
 						<span class="card-title">{{item.title}}</span>
 						<a class="btn-floating halfway-fab waves-effect waves-light red" 
 						:href="'/detail?id=' + item.id "><i class="fa fa-coffee"></i></a>
@@ -40,11 +40,13 @@ export default {
   name: 'app',
   data () {
     return {
-      items: []
+      items: [],
+	  baseImgUrl:''
     }
   },
   mounted: function () {
 	document.title="首页";
+	this.baseImgUrl = BASE_IMG_URL;
 	jQuery.common.isLogin();
 	this.getList();
   },

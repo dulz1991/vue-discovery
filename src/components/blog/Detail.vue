@@ -6,7 +6,7 @@
 	  
 	<div class="col s12">
 		<div class="card-image">
-			<img :src="item.imgPath" width="100%">
+			<img :src="baseImgUrl+item.imagePath" width="100%">
 			<!-- <span class="card-title">{{item.title}}</span> -->
 		</div>
 		<div class="card-content">
@@ -22,11 +22,13 @@ export default {
   data () {
     return {
       title : '',
-	  item : ''
+	  item : '',
+	  baseImgUrl:''
     }
   },
   mounted: function () {
 	jQuery.common.isLogin();
+	this.baseImgUrl = BASE_IMG_URL;
 	this.getDetail();
   },
   methods: {

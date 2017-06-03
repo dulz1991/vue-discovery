@@ -1,8 +1,11 @@
 <template>
 	<div class="row">
       
-		<form class="col s12 form">
-		
+		<form class="col s12 form" enctype="multipart/form-data" method="POST">
+			
+			<blockquote><h5 class="header">发表图文</h5></blockquote>
+			<input id="username" type="hidden" name="username" class="validate">
+			
 		  <div class="row">
 			<div class="input-field col s12">
 			  <input id="title" type="text" name="title" class="validate">
@@ -12,8 +15,22 @@
 		  
 		  <div class="row">
 			<div class="input-field col s12">
-			  <input id="content" name="content" type="text" class="validate">
+				<textarea id="content" class="materialize-textarea" name="content"></textarea>
 			  <label for="content">内容</label>
+			</div>
+		  </div>
+		  
+		  <div class="row">
+			<div class="input-field col s12">
+				<div class="file-field input-field">
+				  <div class="btn">
+					<span>上传图片</span>
+					<input type="file" name="attachFile" accept="image/*">
+				  </div>
+				  <div class="file-path-wrapper">
+					<input class="file-path validate" type="text">
+				  </div>
+				</div>
 			</div>
 		  </div>
 		  
@@ -49,15 +66,23 @@ export default {
 				self.location=self.location='/login';
 				return;
 			}
-			this.$http.post(BASE_URL+'/auth/post').then(function(res) {
+			var cookie_user = jQuery.common.getCookie(COOKIE_USERNAME);
+			var parm = {};
+			parm.cookie_user = cookie_user;
+			jQuery.common.ajaxFileSubmit('.form', BASE_URL+'/auth/post', true, '/', parm);
+			/*
+			var parm = jQuery.common.getFormJson('.form');
+			parm.cookie_user = cookie_user;
+			this.$http.post(BASE_URL+'/auth/post',parm).then(function(res) {
 				if(res.data.errorNo==200){
-					Materialize.toast(res.data.errorInfo, 3000);
+					self.location='/';
 				} else {
 					Materialize.toast(res.data.errorInfo, 3000);
 				}
             }, function(res) {
 				Materialize.toast(res.data, 3000);
             });
+			*/
 		}
 	}
 }
