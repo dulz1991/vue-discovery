@@ -20,6 +20,7 @@ export default {
     }
   },
   mounted: function () {
+	document.title="关于本站";
 	jQuery.common.isLogin();
   },
 }
