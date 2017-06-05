@@ -269,6 +269,14 @@ jQuery.common = {
 		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
 		var r = window.location.search.substr(1).match(reg);
 		if(r!=null)return  unescape(r[2]); return null;
+	},
+	
+	//json集合间拼接
+	appendJson: function(source, destination){
+		for(var property in source){
+			destination.push(source[property])
+		}
+		return destination;
 	}
 	
 }
