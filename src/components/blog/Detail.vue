@@ -8,7 +8,7 @@
 		<!-- 内容区 -->
 		<div class="col s12">
 			<div class="card-image">
-				<img :src="baseImgUrl+item.imagePath" width="100%">
+				<img :src="BASE_IMG_URL+item.imagePath" width="100%">
 				<!-- <span class="card-title">{{item.title}}</span> -->
 			</div>
 			<div class="card-content">
@@ -20,7 +20,7 @@
 		<div class="col s12" id="commentList" style="margin-top:10px;border-top:1px solid #ddd;">
 			<div style="padding-top:15px;" class="commentItem" v-for="c in commentList" :commentId="c.commentId">
 				<div class="chip">
-					<img :src="baseImgUrl + c.fromAvatar" alt="Contact Person">
+					<img :src="BASE_IMG_URL + c.fromAvatar" alt="Contact Person">
 					{{c.fromName}}
 					<span style="padding-left:10px;">{{c.createTimeStr}}</span>
 				</div>
@@ -80,21 +80,19 @@ export default {
     return {
       title : '',
 	  item : '',
-	  baseImgUrl:'',
 	  commentList: [],
 	  hasComment:false
     }
   },
   mounted: function () {
 	jQuery.common.isLogin();
-	this.baseImgUrl = BASE_IMG_URL;
 	this.getDetail();
 	//this.getCommentList();
   },
   methods: {
 		getDetail: function () {
 			var id = jQuery.common.getQueryString("id");
-			this.$http.get(BASE_URL+'/discoveryDetail?id='+id).then(function(res) {
+			this.$http.get(this.BASE_URL+'/discoveryDetail?id='+id).then(function(res) {
 				if(res.data.errorNo==404){
 					self.location='/Notfound';
 				}
@@ -119,7 +117,7 @@ export default {
 			//这条评论的id
 			var discoveryId = _this.item.id;
 			parm.discoveryId = discoveryId;
-			this.$http.get(BASE_URL+'/getCommentList', {params: parm}).then(function(res) {
+			this.$http.get(this.BASE_URL+'/getCommentList', {params: parm}).then(function(res) {
 				if(res.data.list != undefined && res.data.list.length>=res.data.pageSize){
 					this.hasComment = true;
 				} else {
@@ -135,9 +133,9 @@ export default {
 		doComment : function(){
 			var messageContent = $('input[name="messageContent"]').val();
 			var parm = jQuery.common.getFormJson('.form');
-			var cookie_user = jQuery.common.getCookie(COOKIE_USERNAME);
+			var cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
 			parm.cookie_user = cookie_user;
-			this.$http.post(BASE_URL+'/auth/discovery/doComment', parm).then(function(res) {
+			this.$http.post(this.BASE_URL+'/auth/discovery/doComment', parm).then(function(res) {
 				if(res.data.errorNo==400){
 					Materialize.toast(res.data.errorInfo, 3000);
 					setTimeout("self.location='/login';",800);

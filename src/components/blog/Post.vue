@@ -66,14 +66,14 @@ export default {
 				self.location=self.location='/login';
 				return;
 			}
-			var cookie_user = jQuery.common.getCookie(COOKIE_USERNAME);
+			var cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
 			var parm = {};
 			parm.cookie_user = cookie_user;
-			jQuery.common.ajaxFileSubmit('.form', BASE_URL+'/auth/post', true, '/', parm);
+			jQuery.common.ajaxFileSubmit('.form', this.BASE_URL+'/auth/post', true, '/', parm);
 			/*
 			var parm = jQuery.common.getFormJson('.form');
 			parm.cookie_user = cookie_user;
-			this.$http.post(BASE_URL+'/auth/post',parm).then(function(res) {
+			this.$http.post(this.BASE_URL+'/auth/post',parm).then(function(res) {
 				if(res.data.errorNo==200){
 					self.location='/';
 				} else {

@@ -47,7 +47,7 @@ export default {
 		doRegist: function () {
 			var parm = jQuery.common.getFormJson('.form');
 			console.log(parm);
-			this.$http.post(BASE_URL+'/doRegist',parm
+			this.$http.post(this.BASE_URL+'/doRegist',parm
             ).then(function(res) {
 				if(res.data.errorNo==200){
 					Materialize.toast(res.data.tip, 3000);

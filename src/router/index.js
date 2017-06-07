@@ -1,30 +1,22 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Hello from '@/components/Hello'
+import Home from '@/components/Home'
 import Login from '@/components/Login'
-
+import Regist from '@/components/Regist'
+import Help from '@/components/Help'
+import About from '@/components/About'
+import Detail from '@/components/blog/Detail'
+import Post from '@/components/blog/Post'
 const NotFound = { template: '<p>Page not found</p>' }
-const Home = { template: '<p>home page</p>' }
-const About = { template: '<p>about page</p>' }
 
-/*
-const routes = {
-  '/': Home,
-  '/about': About
-}
-*/
-
-
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Hello',
-      component: Hello
-    },{
-		path: '/login',
-		name: 'Login',
-		component: Login
+export default ({
+	name:'',
+	routes: {
+		'/NotFound': NotFound,
+		'/': Home,
+		'/login': Login,
+		'/regist': Regist,
+		'/about': About,
+		'/help': Help,
+		'/detail': Detail,
+		'/post': Post
 	}
-  ]
 })

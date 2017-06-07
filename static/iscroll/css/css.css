@@ -49,15 +49,14 @@
  */
 #pullDown, #pullUp {
     background:#fff;
-    height:40px;
-    line-height:40px;
+    line-height:32px;
     padding:5px 10px;
     border-bottom:1px solid #ccc;
     font-weight:bold;
     font-size:14px;
-    color:#888;
+    color:#aaa;
     text-align: center;
-	margin-top:15px;
+	margin-top:32px;
 }
 #pullUp{
     margin-top: 30px;

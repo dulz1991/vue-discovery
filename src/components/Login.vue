@@ -47,10 +47,10 @@ export default {
 		doLogin: function () {
 			var parm = jQuery.common.getFormJson('.form');
 			console.log(parm);
-			this.$http.post(BASE_URL+'/doLogin',parm
+			this.$http.post(this.BASE_URL+'/doLogin',parm
             ).then(function(res) {
 				if(res.data.errorNo==200){
-					jQuery.common.setCookie(COOKIE_USERNAME,res.data.userNameBase64 , -1);
+					jQuery.common.setCookie(this.COOKIE_USERNAME,res.data.userNameBase64 , -1);
 					Materialize.toast(res.data.tip, 500);
 					setTimeout("self.location='/';",1000);
 				} else {

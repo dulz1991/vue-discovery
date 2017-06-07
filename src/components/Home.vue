@@ -7,7 +7,7 @@
 		
 			<div id="pullDown">
 				<span class="pullDownIcon"></span>
-				<span class="pullDownLabel">下拉加载更多数据</span>
+				<span class="pullDownLabel">数据刷新于：{{currentDatetime}}</span>
 			</div>
 
 			<div class="row" id="thelist">
@@ -15,7 +15,7 @@
 
 					<div class="card item" v-if="item.hasImg" :discoveryId="item.id">	
 						<div class="card-image">
-							<img :src="baseImgUrl+item.imagePath" >
+							<img :src="BASE_IMG_URL+item.imagePath" >
 							<span class="card-title">{{item.title}}</span>
 							<a class="btn-floating halfway-fab waves-effect waves-light red" 
 							:href="'/detail?id=' + item.id "><i class="fa fa-coffee"></i></a>
@@ -106,32 +106,35 @@ export default {
   name: 'app',
   data () {
     return {
-      items: [], //列表集合
-	  baseImgUrl:'', //图片地址前缀
-//	  myScroll:'',
-      pullDownEl:'',
-      pullDownOffset:'',
-      pullUpEl:'',
-      pullUpOffset:''
+		currentDatetime : '',
+		firstLoad: true,
+		items: [], //列表集合
+		//pullDownEl:'',
+		pullDownOffset:'',
+		//pullUpEl:'',
+		pullUpOffset:''
     }
   },
   mounted: function () {
 	document.title="首页";
-	this.baseImgUrl = BASE_IMG_URL;
 	jQuery.common.isLogin();
 	
 	this.init();
+	this.initCurrentDate();
 	this.getList();
   },
   methods: {
-		init:function(){
+		initCurrentDate: function(){
+			this.currentDatetime=new Date().format("yyyy-MM-dd hh:mm:ss");
+		},
+		init: function(){
 			var obj=document.getElementById('app');
 			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 			document.addEventListener('DOMContentLoaded', function () { setTimeout(this.loaded, 200); }, false);
 			this.loaded();
 		},
 		getList: function () {
-			this.$http.get(BASE_URL+'/discoveryList').then(function(res) {
+			this.$http.get(this.BASE_URL+'/discoveryList').then(function(res) {
 				this.items=res.data.list;
             }, function(res) {
 				Materialize.toast(res.data, 3000);
@@ -140,54 +143,57 @@ export default {
 		loaded: function(){
 			var _this = this;
 			//$('#pullDown') = $('#pullDown');
-			this.pullDownOffset = $('#pullDown').height();
+			_this.pullDownOffset = $('#pullDown').height();
 			//$('#pullUp') = $('#pullUp');
-			this.pullUpOffset = $('#pullUp').height();
+			_this.pullUpOffset = $('#pullUp').height();
 			var myScroll = new iScroll('wrapper', {
 				useTransition: true,
-				topOffset: this.pullDownOffset,
+				topOffset: _this.pullDownOffset,
 				onRefresh: function () {
 					if ($('#pullDown').hasClass('loading')) {
 						$('#pullDown').removeClass('loading');
-						$('#pullDown').find('.pullDownLabel').text('下拉加载更多数据');
+						$('#pullDown').find('.pullDownLabel').text('数据刷新于：'+_this.currentDatetime);
 					} else if ($('#pullUp').hasClass('loading')) {
 						$('#pullUp').removeClass('loading');
-						$('#pullUp').find('.pullUpLabel').text('上拉加载更多数据');
+						//$('#pullUp').find('.pullUpLabel').text('上拉加载更多数据');
+						$('#pullUp').find('.pullUpLabel').text('数据刷新于：'+_this.currentDatetime);
 					}
 				},
 				onScrollMove: function () {
-					if (this.y > 5 && !$('#pullDown').hasClass('flip')) {
+					if(_this.firstLoad){
+						_this.firstLoad=false;
+						myScroll.refresh();
+					}
+					var limitLength = 15;
+					if (this.y > limitLength && !$('#pullDown').hasClass('flip')) {
 						$('#pullDown').addClass('flip');
 						$('#pullDown').find('.pullDownLabel').text('释放加载数据...');
 						this.minScrollY = 0;
-					} else if (this.y < 5 && $('#pullDown').hasClass('flip')) {
+					} else if (this.y < limitLength && $('#pullDown').hasClass('flip')) {
 						$('#pullDown').removeClass('flip');
 						$('#pullDown').find('.pullDownLabel').text('下拉刷新...');
-						this.minScrollY = -this.pullDownOffset;
-					} else if (this.y < (this.maxScrollY - 5) && !$('#pullUp').hasClass('flip')) {
+						this.minScrollY = -_this.pullDownOffset;
+					} else if (this.y < (this.maxScrollY - limitLength) && !$('#pullUp').hasClass('flip')) {
 						$('#pullUp').addClass('flip');
 						$('#pullUp').find('.pullUpLabel').text('释放加载数据...');
 						this.maxScrollY = this.maxScrollY;
-					} else if (this.y > (this.maxScrollY + 5) && $('#pullUp').hasClass('flip')) {
+					} else if (this.y > (this.maxScrollY + limitLength) && $('#pullUp').hasClass('flip')) {
 						$('#pullUp').removeClass('flip');
 						$('#pullUp').find('.pullUpLabel').text('上拉加载更多...');
-						this.maxScrollY = this.pullUpOffset;
+						this.maxScrollY = _this.pullUpOffset;
 					}
 				},
 				onScrollEnd: function () {
 					if ($('#pullDown').hasClass('flip')) {
 						$('#pullDown').removeClass('flip');
 						$('#pullDown').addClass('loading');
-						$('#pullDown').find('.pullDownLabel').text('拼命加载中...');
-						//this.refreshScrollBar();
+						$('#pullDown').find('.pullDownLabel').html('<i class="fa fa-spinner fa-spin">加载中...</i>');
 						pullDownAction();	// Execute custom function (ajax call?)
 					} else if ($('#pullUp').hasClass('flip')) {
 						$('#pullUp').removeClass('flip');
 						$('#pullUp').addClass('loading');
-						$('#pullUp').find('.pullUpLabel').text('拼命加载中...');
-						
+						$('#pullUp').find('.pullUpLabel').html('<i class="fa fa-spinner fa-spin">加载中...</i>');
 						pullUpAction();	// Execute custom function (ajax call?)
-						$('#pullUp').find('.pullUpLabel').text('数据已全部加载完毕');
 					}
 				}
 			});
@@ -207,7 +213,7 @@ export default {
 					var discoveryId = $('#thelist').find('div.item').eq(0).attr('discoveryId');
 					parm.discoveryId = discoveryId;
 					parm.type = 'down';
-					_this.$http.get(BASE_URL+'/discoveryList', {params: parm}).then(function(res) {
+					_this.$http.get(_this.BASE_URL+'/discoveryList', {params: parm}).then(function(res) {
 						if(res.data.errorNo==200){
 							if(res.data.list != undefined && res.data.list.length>=res.data.pageSize){
 								_this.items = jQuery.common.appendJson(_this.items, res.data.list);
@@ -215,12 +221,11 @@ export default {
 						} else {
 							Materialize.toast('数据已最新', 3000);
 						}
+						_this.initCurrentDate();
 					}, function(res) {
 						Materialize.toast(res.data, 3000);
 					});
-					
 					refreshScrollBar();
-					console.log($("#thelist").height())
 				}, 1000);
 			}
 			//上拉刷新
@@ -232,20 +237,19 @@ export default {
 					var discoveryId = $('#thelist').find('div.item').eq(lastIndex-1).attr('discoveryId');
 					parm.discoveryId = discoveryId;
 					parm.type = 'up';
-					_this.$http.get(BASE_URL+'/discoveryList', {params: parm}).then(function(res) {
+					_this.$http.get(_this.BASE_URL+'/discoveryList', {params: parm}).then(function(res) {
 						if(res.data.errorNo==200){
 							console.log(res.data.list);
 							if(res.data.list != undefined && res.data.list.length>=0){
 								_this.items = jQuery.common.appendJson(res.data.list, _this.items);
 							} 
 						} else {
-							Materialize.toast('没有更多数据了', 3000);
+							//Materialize.toast('没有更多数据了', 3000);
 						}
+						_this.initCurrentDate();
 					}, function(res) {
 						Materialize.toast(res.data, 3000);
 					});
-					
-					console.log($("#thelist").height());
 					refreshScrollBar();
 				}, 1000);
 			}
