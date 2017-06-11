@@ -18,13 +18,20 @@
 		
 		<!-- 评论区 -->
 		<div class="col s12" id="commentList" style="margin-top:10px;border-top:1px solid #ddd;">
-			<div style="padding-top:15px;" class="commentItem" v-for="c in commentList" :commentId="c.commentId">
+			<div style="padding-top:15px;" class="commentItem" v-for="c in commentList" :commentId="c.id">
 				<div class="chip">
 					<img :src="BASE_IMG_URL + c.fromAvatar" alt="Contact Person">
 					{{c.fromName}}
 					<span style="padding-left:10px;">{{c.createTimeStr}}</span>
 				</div>
-				<div>{{c.messageContent}}</div>
+				<div :commentId="c.id" :fromId="c.fromId" :fromName="c.fromName" :discoveryId="c.discoveryId" v-on:click="showModal($event)">{{c.messageContent}}</div>
+					
+					<!-- 评论的评论列表 -->
+					<div>
+						<div style="margin-left:10px;" v-for="c1 in c.commentList">
+							{{c1.fromName}}： {{c1.messageContent}}
+						</div>
+					</div>
 			</div>
 		</div>
 		<div style="margin-top:15px;" v-if="hasComment">
@@ -68,6 +75,22 @@
 			</li>
 		</ul> 
 	</div>
+
+	
+	<div id="modal1" class="modal bottom-sheet">
+	    <div class="modal-content">
+		    <form class="replyForm">
+				<input type="hidden" name="toId" :value="toId" />
+				<input type="hidden" name="commentId" :value="commentId" />
+				<input type="hidden" name="discoveryId" :value="discoveryId" />
+		      	<input type="text" name="messageContent" value="" :placeholder="'回复:'+replyToName" />
+	      	</form>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" v-on:click="commentSubmit" class="modal-action modal-close waves-effect waves-green btn-flat">提交</a>
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
+	    </div>
+	</div>
 	
 	
 </div>
@@ -81,7 +104,12 @@ export default {
       title : '',
 	  item : '',
 	  commentList: [],
-	  hasComment:false
+	  hasComment:false,
+
+	  commentId: '',
+	  toId: '',
+	  replyToName:'',
+	  discoveryId: ''
     }
   },
   mounted: function () {
@@ -151,6 +179,25 @@ export default {
             }, function(res) {
 				Materialize.toast(res.data.error, 3000);
             });
+		},
+		showModal: function(obj){
+			this.commentId =$(obj.target).attr('commentId');
+			this.toId = $(obj.target).attr('fromId');
+			this.replyToName = $(obj.target).attr('fromName');
+			this.discoveryId = $('input[name="hiddenId"]').val();
+			$('#modal1').modal('open');
+		},
+		commentSubmit: function(){
+			var parm = jQuery.common.getFormJson('.replyForm');
+			this.$http.post(this.BASE_URL+'/auth/doCommentForComment', parm).then(function(res) {
+				if(res.data.errorNo==200){
+					Materialize.toast(res.data.tip, 1000);
+				} else {
+					Materialize.toast(res.data.errorInfo, 3000);
+				}
+		      }, function(res) {
+					Materialize.toast(res.data.error, 3000);
+		      });
 		}
 	}
 }

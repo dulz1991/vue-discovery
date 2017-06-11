@@ -239,7 +239,7 @@ jQuery.common = {
 		return v ? v[2] : null;
 	},
 	deleteCookie: function (name) {
-		this.set(name, '', -1);
+		jQuery.common.setCookie(name, "", -1); 
 	},
 	
 	//判断是否为空

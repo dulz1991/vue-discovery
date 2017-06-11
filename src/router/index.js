@@ -3,20 +3,34 @@ import Login from '@/components/Login'
 import Regist from '@/components/Regist'
 import Help from '@/components/Help'
 import About from '@/components/About'
+
+//blog
 import Detail from '@/components/blog/Detail'
 import Post from '@/components/blog/Post'
-const NotFound = { template: '<p>Page not found</p>' }
+
+//usercenter
+import UserCenterIndex from '@/components/userCenter/Index'
+import MyInfo from '@/components/userCenter/MyInfo'
+import Feedback from '@/components/userCenter/Feedback'
+import MyPost from '@/components/userCenter/MyPost'
+import Setting from '@/components/userCenter/Setting'
+import Changepwd from '@/components/userCenter/Changepwd'
 
 export default ({
-	name:'',
+	name:'myRoute',
 	routes: {
-		'/NotFound': NotFound,
 		'/': Home,
 		'/login': Login,
 		'/regist': Regist,
 		'/about': About,
 		'/help': Help,
 		'/detail': Detail,
-		'/post': Post
+		'/post': Post,
+		'/user/index': UserCenterIndex,
+		'/user/info': MyInfo,
+		'/user/feedback': Feedback,
+		'/user/myPost': MyPost,
+		'/user/set': Setting,
+		'/user/changepwd': Changepwd
 	}
 })
