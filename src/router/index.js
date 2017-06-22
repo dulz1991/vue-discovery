@@ -15,6 +15,7 @@ import Feedback from '@/components/userCenter/Feedback'
 import MyPost from '@/components/userCenter/MyPost'
 import Setting from '@/components/userCenter/Setting'
 import Changepwd from '@/components/userCenter/Changepwd'
+import UploadAvatar from '@/components/userCenter/UploadAvatar'
 
 export default ({
 	name:'myRoute',
@@ -31,6 +32,7 @@ export default ({
 		'/user/feedback': Feedback,
 		'/user/myPost': MyPost,
 		'/user/set': Setting,
-		'/user/changepwd': Changepwd
+		'/user/changepwd': Changepwd,
+		'/user/uploadAvatar': UploadAvatar
 	}
 })

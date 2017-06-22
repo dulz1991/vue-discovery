@@ -49,7 +49,7 @@ export default {
 			console.log(parm);
 			this.$http.post(this.BASE_URL+'/doLogin',parm).then(function(res) {
 				if(res.data.errorNo==200){
-					jQuery.common.setCookie(this.COOKIE_USERNAME,res.data.userNameBase64 , -1);
+					jQuery.common.setCookie(this.COOKIE_USERNAME,res.data.username , -1);
 					Materialize.toast(res.data.tip, 500);
 					setTimeout("self.location='/';",500);
 				} else {

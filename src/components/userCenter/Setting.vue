@@ -16,7 +16,7 @@ export default {
   data () {
     return {
     	title: '设置',
-      isLogin : ''
+      	isLogin : ''
     }
   },
    mounted: function () {
@@ -26,7 +26,10 @@ export default {
    },
   methods: {
 	init: function(){
-		
+		if(!this.isLogin){
+			self.location='/login';
+			return;
+		}
 	},
 	doLogout: function(){
 		jQuery.common.deleteCookie(this.COOKIE_USERNAME);

@@ -277,6 +277,35 @@ jQuery.common = {
 			destination.push(source[property])
 		}
 		return destination;
+	},
+
+	/**
+	 * 图片上传预览
+	 * @param {[type]} source [description]
+	 * @param {[type]} target [description]
+	 */
+	setImagePreviews: function(source, target){
+		var docObj = document.getElementById(source);
+	    var dd = document.getElementById(target);
+	    dd.innerHTML = "";
+	    var fileList = docObj.files;
+	    for (var i = 0; i < fileList.length; i++) {    
+	        if (docObj.files && docObj.files[i]) {
+	            /*dd.style.width = '80px';
+	            dd.style.height = '82px';*/
+	            dd.src=window.URL.createObjectURL(docObj.files[i]); 
+	        } else {
+	            /*dd.style.width = '80px';
+	            dd.style.height = '82px';*/
+	            dd.src="/static/images/z_add.png"; 
+	        }
+	    }  
+	    if(fileList.length==0){
+	        /*dd.style.width = '80px';
+	        dd.style.height = '82px';*/
+	        dd.src="/static/images/z_add.png"; 
+	    }
+	    return true;
 	}
 	
 }

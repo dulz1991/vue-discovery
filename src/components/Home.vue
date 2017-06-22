@@ -15,7 +15,7 @@
 
 					<div class="card item" v-if="item.hasImg" :discoveryId="item.id">	
 						<div class="card-image">
-							<img :src="BASE_IMG_URL+item.imagePath" >
+							<img :src="BASE_IMG_URL+item.imagePath" class="materialboxed">
 							<span class="card-title">{{item.title}}</span>
 							<a class="btn-floating halfway-fab waves-effect waves-light red" 
 							:href="'/detail?id=' + item.id "><i class="fa fa-coffee"></i></a>

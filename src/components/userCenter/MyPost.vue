@@ -5,7 +5,7 @@
 		
 		<div class="collection">
 			<a class="collection-item" v-for="item in items" :href="'/detail?id=' + item.id ">
-				<span class="badge blue" style="color:#fff;">{{item.clickNum}}</span>
+				<span class="badge blue" style="color:#fff;">点击:{{item.clickNum}} 评论:0</span>
 				{{item.title}}
 			</a>			
 		</div>
@@ -30,10 +30,10 @@ export default {
    },
   methods: {
 	init: function(){
-		/*if(!this.isLogin){
+		if(!this.isLogin){
 			self.location='/login';
 			return;
-		}*/
+		}
 		var parm = {};
 		var cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
 		parm.cookie_user = cookie_user;

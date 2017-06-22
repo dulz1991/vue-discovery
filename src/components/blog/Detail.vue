@@ -1,8 +1,13 @@
 <template>
 <div class="row">
 		<input type="hidden" name="hiddenId" :value="item.id">
-      <div class="col s12"><blockquote><h5 class="header">{{item.title}}</h5> </blockquote></div>
-      <div class="col s6">{{item.username}}</div>
+      <div class="col s12"><blockquote><h5 class="header">
+      	{{item.title}}
+      	</h5> </blockquote></div>
+      <div class="col s6">
+      	<img :src="BASE_IMG_URL + item.avatar" style="width:32px;border-radius:40px;">
+      	<span style="position:relative;top:-10px;">{{item.username}}</span>
+      </div>
       <div class="col s6"><span class="flow-text">{{item.createTimeStr}}</span></div>
 	
 		<!-- 内容区 -->
@@ -18,7 +23,7 @@
 		
 		<!-- 评论区 -->
 		<div class="col s12" id="commentList" style="margin-top:10px;border-top:1px solid #ddd;">
-			<div style="padding-top:15px;" class="commentItem" v-for="c in commentList" :commentId="c.id">
+			<div style="padding-top:15px;" class="commentItem" :id="'commentItem'+c.id" v-for="c in commentList" :commentId="c.id">
 				<div class="chip">
 					<img :src="BASE_IMG_URL + c.fromAvatar" alt="Contact Person">
 					{{c.fromName}}
@@ -27,8 +32,8 @@
 				<div :commentId="c.id" :fromId="c.fromId" :fromName="c.fromName" :discoveryId="c.discoveryId" v-on:click="showModal($event)">{{c.messageContent}}</div>
 					
 					<!-- 评论的评论列表 -->
-					<div>
-						<div style="margin-left:10px;" v-for="c1 in c.commentList">
+					<div class="commentArea">
+						<div v-for="c1 in c.commentList">
 							{{c1.fromName}}： {{c1.messageContent}}
 						</div>
 					</div>
@@ -189,9 +194,15 @@ export default {
 		},
 		commentSubmit: function(){
 			var parm = jQuery.common.getFormJson('.replyForm');
+			parm.cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
+			var _this = this;
 			this.$http.post(this.BASE_URL+'/auth/doCommentForComment', parm).then(function(res) {
 				if(res.data.errorNo==200){
-					Materialize.toast(res.data.tip, 1000);
+					var _commentId = parm.commentId;
+					var _username = jQuery.common.getCookie(this.COOKIE_USERNAME);
+					var _html = '';
+					_html += '<div>'+_username+'： '+parm.messageContent+'</div>';
+					$("#commentItem"+_commentId).find('.commentArea').append(_html);
 				} else {
 					Materialize.toast(res.data.errorInfo, 3000);
 				}
@@ -203,5 +214,7 @@ export default {
 }
 
 </script>
-
+<style>
+.commentArea{background-color:#eee;}
+.commentArea div{padding:2px 15px;}
 </style>

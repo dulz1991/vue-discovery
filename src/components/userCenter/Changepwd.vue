@@ -46,8 +46,13 @@ export default {
   },
   methods: {
 		doChange: function () {
-			 var parm = jQuery.common.getFormJson('.form');
-       this.$http.post(this.BASE_URL+'/user/doChangepwd',parm).then(function(res) {
+      /*if(!this.isLogin){
+        self.location='/login';
+        return;
+      }*/
+      var parm = jQuery.common.getFormJson('.form');
+      parm.cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
+      this.$http.post(this.BASE_URL+'/user/doChangepwd',parm).then(function(res) {
         if(res.data.errorNo==200){
           Materialize.toast(res.data.tip, 1000);
           setTimeout("self.location='/user/index';",500);

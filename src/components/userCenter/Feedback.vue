@@ -24,7 +24,10 @@ export default {
    },
   methods: {
 	init: function(){
-		
+		if(!this.isLogin){
+	    	self.location='/login';
+	        return;
+	    }
 	}
   }
 }
