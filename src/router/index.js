@@ -1,6 +1,6 @@
 import Home from '@/components/Home'
-import Login from '@/components/Login'
-import Regist from '@/components/Regist'
+import Login from '@/components/account/Login'
+import Regist from '@/components/account/Regist'
 import Help from '@/components/Help'
 import About from '@/components/About'
 
@@ -13,6 +13,8 @@ import UserCenterIndex from '@/components/userCenter/Index'
 import MyInfo from '@/components/userCenter/MyInfo'
 import Feedback from '@/components/userCenter/Feedback'
 import MyPost from '@/components/userCenter/MyPost'
+import MyComment from '@/components/userCenter/MyComment'
+import MyCollection from '@/components/userCenter/MyCollection'
 import Setting from '@/components/userCenter/Setting'
 import Changepwd from '@/components/userCenter/Changepwd'
 import UploadAvatar from '@/components/userCenter/UploadAvatar'
@@ -31,6 +33,8 @@ export default ({
 		'/user/info': MyInfo,
 		'/user/feedback': Feedback,
 		'/user/myPost': MyPost,
+		'/user/myComment': MyComment,
+		'/user/myCollection': MyCollection,
 		'/user/set': Setting,
 		'/user/changepwd': Changepwd,
 		'/user/uploadAvatar': UploadAvatar

@@ -22,7 +22,7 @@
 		</div>
 		
 		<!-- 评论区 -->
-		<div class="col s12" id="commentList" style="margin-top:10px;border-top:1px solid #ddd;">
+		<div class="col s12" id="commentList" style="margin-top:10px;border-top:1px solid #ddd;margin-bottom:60px;">
 			<div style="padding-top:15px;" class="commentItem" :id="'commentItem'+c.id" v-for="c in commentList" :commentId="c.id">
 				<div class="chip">
 					<img :src="BASE_IMG_URL + c.fromAvatar" alt="Contact Person">
@@ -42,7 +42,7 @@
 		<div style="margin-top:15px;" v-if="hasComment">
 			<h5 class="center-align" v-on:click="getCommentList">查看更多</h5>
 		</div>
-		<div style="margin-top:15px;margin-bottom:40px;" >
+		<div style="margin-top:15px;" >
 			<h5 class="center-align">&nbsp;</h5>
 		</div>
 			
@@ -75,6 +75,10 @@
 					style="background-color:#fff;color:#666;width:75%;margin:2 4px;border-radius:20px;padding-left:6px;"
 					placeholder="发表评论"	value="">
 					<span style="margin-left:10px;" v-on:click="doComment">发表</span>
+					<span style="margin-left:10px;" :discoveryId="item.id" v-on:click="doCollection($event)">
+						<i class="fa fa-star-o" v-if="!hasCollected"></i>
+						<i class="fa fa-star" style="color:yellow" v-if="hasCollected"></i>
+					</span>
 				</form>
 				</a>
 			</li>
@@ -114,7 +118,8 @@ export default {
 	  commentId: '',
 	  toId: '',
 	  replyToName:'',
-	  discoveryId: ''
+	  discoveryId: '',
+	  hasCollected: false //是否已收藏
     }
   },
   mounted: function () {
@@ -124,12 +129,15 @@ export default {
   },
   methods: {
 		getDetail: function () {
-			var id = jQuery.common.getQueryString("id");
-			this.$http.get(this.BASE_URL+'/discoveryDetail?id='+id).then(function(res) {
+			var parm = {};
+			parm.id=jQuery.common.getQueryString("id");
+			parm.cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
+			this.$http.get(this.BASE_URL+'/discoveryDetail', {params: parm}).then(function(res) {
 				if(res.data.errorNo==404){
 					self.location='/Notfound';
 				}
 				this.item=res.data.detail;
+				this.hasCollected=res.data.hasCollected;
 				document.title = res.data.detail.title;
 				
 				this.getCommentList();
@@ -203,6 +211,23 @@ export default {
 					var _html = '';
 					_html += '<div>'+_username+'： '+parm.messageContent+'</div>';
 					$("#commentItem"+_commentId).find('.commentArea').append(_html);
+				} else {
+					Materialize.toast(res.data.errorInfo, 3000);
+				}
+		      }, function(res) {
+					Materialize.toast(res.data.error, 3000);
+		      });
+		},
+		doCollection: function(obj){
+			var parm = {};
+			parm.cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
+			parm.discoveryId = $(obj.target).parent().attr('discoveryId');
+			this.$http.post(this.BASE_URL+'/auth/addDiscoveryCollection', parm).then(function(res) {
+				if(res.data.errorNo==200){
+					$(obj.target).parent().html('<i class="fa fa-star"></i>');
+					Materialize.toast(res.data.errorInfo, 3000);
+				} else if(res.data.errorNo==400) {
+					self.location="/login";
 				} else {
 					Materialize.toast(res.data.errorInfo, 3000);
 				}
