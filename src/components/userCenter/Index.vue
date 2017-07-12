@@ -38,7 +38,6 @@ export default {
   name: 'userCenterIndex',
   data () {
     return {
-      isLogin : '',
 	  myPostCount:0,
 	  myCollectionCount:0,
 	  myCommentCount:0,
@@ -48,15 +47,11 @@ export default {
   },
    mounted: function () {
 		document.title="用户中心";
-		jQuery.common.isLogin();
 		this.init();
    },
   methods: {
 	init: function(){
-		var parm = {};
-		var cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
-		parm.cookie_user = cookie_user;
-		this.$http.get(this.BASE_URL+'/user/index', {params: parm}).then(function(res) {
+		this.$http.get(this.BASE_URL+'/user/index').then(function(res) {
 			console.log(res.data)
 			this.myPostCount = res.data.myPostCount;
 			this.myCollectionCount = res.data.myCollectionCount;

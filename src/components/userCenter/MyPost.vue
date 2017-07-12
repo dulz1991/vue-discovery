@@ -19,24 +19,16 @@ export default {
   data () {
     return {
     	title: '我发表的',
-      isLogin : '',
-      items: []
+      	items: []
     }
   },
    mounted: function () {
 		document.title= this.title;
-		this.isLogin = jQuery.common.isLogin();
 		this.init();
    },
   methods: {
 	init: function(){
-		if(!this.isLogin){
-			self.location='/login';
-			return;
-		}
 		var parm = {};
-		var cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
-		parm.cookie_user = cookie_user;
 		parm.pageNo=1;
 		this.$http.get(this.BASE_URL+'/user/myPost', {params: parm}).then(function(res) {
 			this.items = res.data.page.list;

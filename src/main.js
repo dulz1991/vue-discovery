@@ -2,11 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueResource from 'vue-resource'
-import App from './App'
 import MyRouter from './router/index'
 import Defines from './defines'
-
-const NotFound = { template: '<p>Page not found</p>' }
 
 //全局变量
 Object.keys(Defines).forEach((key)=>{
@@ -60,11 +57,12 @@ new Vue({
 
 function routeInteceptors(obj){
   let url = obj.currentRoute;
-  if(url.indexOf('user')>0){
+  if(url.indexOf('/user')==0){
     let isLogin = jQuery.common.isLogin();  
     if(!isLogin){
-      return MyRouter.routes['/login'];
+      self.location = "/login?redirectUrl=" +window.location.href;
+      return;
     }  
   }
-  return MyRouter.routes[obj.currentRoute] || NotFound;
+  return MyRouter.routes[url] || NotFound;
 }

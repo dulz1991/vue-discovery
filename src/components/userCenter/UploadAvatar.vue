@@ -32,13 +32,11 @@ export default {
   name: 'uploadAvatar',
   data () {
     return {
-    	title: '上传头像',
-      	isLogin : ''
+    	title: '上传头像'
     }
   },
    mounted: function () {
 		document.title=this.title;
-		this.isLogin = jQuery.common.isLogin();
 		this.init();
    },
   methods: {
@@ -47,7 +45,7 @@ export default {
 	},
 	doSubmit: function(){
 		var formData = new FormData($(".form")[0]); 
-		formData.append("cookie_user", jQuery.common.getCookie(this.COOKIE_USERNAME));
+		/*formData.append("cookie_user", jQuery.common.getCookie(this.COOKIE_USERNAME));*/
 		console.log(formData);
 		this.$http.post(this.BASE_URL+'/user/uploadAvatar',formData).then(function(res) {
 		    if(res.data.errorNo==200){

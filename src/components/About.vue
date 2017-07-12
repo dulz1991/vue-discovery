@@ -24,7 +24,6 @@ export default {
   },
   mounted: function () {
 	document.title = this.title;
-	jQuery.common.isLogin();
   },
 }
 </script>

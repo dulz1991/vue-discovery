@@ -41,7 +41,6 @@ export default {
   },
   mounted: function () {
 	document.title="注册";
-	jQuery.common.isLogin();
   },
   methods: {
 		doRegist: function () {

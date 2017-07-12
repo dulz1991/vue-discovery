@@ -41,7 +41,6 @@ export default {
   },
   mounted: function () {
 	document.title="登录";
-	jQuery.common.isLogin();
   },
   methods: {
 		doLogin: function () {
@@ -49,14 +48,18 @@ export default {
 			console.log(parm);
 			this.$http.post(this.BASE_URL+'/doLogin',parm).then(function(res) {
 				if(res.data.errorNo==200){
-					jQuery.common.setCookie(this.COOKIE_USERNAME,res.data.username , -1);
-					Materialize.toast(res.data.tip, 500);
-					setTimeout("self.location='/';",500);
+          Materialize.toast(res.data.tip, 500);
+          var redirectUrl = jQuery.common.getQueryString("redirectUrl");
+          if(jQuery.common.notBlank(redirectUrl)){
+            setTimeout("self.location='/';",500);  
+          } else {
+            setTimeout("self.location='/user/index';",500);  
+          }
 				} else {
 					Materialize.toast(res.data.errorInfo, 3000);
 				}
       }, function(res) {
-				Materialize.toast(res.data, 3000);
+				Materialize.toast(res.data.errorInfo, 3000);
       });
 		}
 	}

@@ -22,6 +22,7 @@ import UploadAvatar from '@/components/userCenter/UploadAvatar'
 export default ({
 	name:'myRoute',
 	routes: {
+		'/notFount': { template: '<p>Page not found</p>' },
 		'/': Home,
 		'/login': Login,
 		'/regist': Regist,

@@ -11,9 +11,9 @@
 			</div>
 
 			<div class="row" id="thelist">
-				<div class="col s12 m6" v-for="item in items">
+				<div class="col s12 m6" v-for="item in items" style="padding:0;">
 
-					<div class="card item" v-if="item.hasImg" :discoveryId="item.id">	
+					<!-- <div class="card item" v-if="item.hasImg" :discoveryId="item.id">	
 						<div class="card-image">
 							<img :src="BASE_IMG_URL+item.imagePath" class="materialboxed">
 							<span class="card-title">{{item.title}}</span>
@@ -24,20 +24,36 @@
 							<p>{{item.content}}</p>
 						</div>
 					</div>
-					<div class="card item" :discoveryId="item.id" v-else>
+					<div class="card item"  :discoveryId="item.id" v-else>
 						<div class="col s12 m6">
-							<div class="card blue-grey darken-1">
-								<div class="card-content white-text">
-									<span class="card-title">{{item.title}}</span>
+							<div class="card white">
+								<div class="card-content black-text">
+									<blockquote><h5 class="header">{{item.title}}</h5></blockquote>
 									<p>{{item.content}}</p>
 								</div>
 								<div class="card-action">
+									<a href="#">This is a link</a>
 									<a :href="'/detail?id=' + item.id " class="btn-floating halfway-fab waves-effect waves-light red"><i class="fa fa-coffee"></i></a>
 								</div>
 							</div>
 						</div>
-					</div>
-				
+					</div> -->
+
+					<div id="" class="waves-effect white" @click="viewDetail(item.id)" style="text-align:left;width:100%;padding:10px 20px;margin-top:2px;">
+					    <div class="" style="">
+					      <blockquote><h6 class="header">{{item.title}}</h6></blockquote>
+					      <img :src="BASE_IMG_URL+item.imagePath" style="width:100%;" class="materialboxed">
+					      <p>{{item.content}}</p>
+					    </div>
+					    <div style="border-top:0px solid #eee;padding-top:0px;color:#aaa;">
+					      	<span>{{item.userId}}</span> | 
+					      	<span>{{item.createTimeStr}}</span>
+					    </div>
+					  </div>
+					<!-- <div class="waves-effect waves-light white waves-orange">
+						{{item.content}}
+					</div> -->
+
 				</div>
 			</div>	
 			
@@ -117,7 +133,6 @@ export default {
   },
   mounted: function () {
 	document.title="首页";
-	jQuery.common.isLogin();
 	
 	this.init();
 	this.initCurrentDate();
@@ -132,6 +147,9 @@ export default {
 			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 			document.addEventListener('DOMContentLoaded', function () { setTimeout(this.loaded, 200); }, false);
 			this.loaded();
+		},
+		viewDetail: function(id){
+			self.location="/detail?id="+id;
 		},
 		getList: function () {
 			this.$http.get(this.BASE_URL+'/discoveryList').then(function(res) {
@@ -261,7 +279,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

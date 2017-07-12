@@ -58,17 +58,10 @@ export default {
   },
   mounted: function () {
 	document.title="我要发表";
-	this.isLogin = jQuery.common.isLogin();
   },
   methods: {
 		doPost: function () {
-			if(!this.isLogin){
-				self.location=self.location='/login';
-				return;
-			}
-			var cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
 			var parm = {};
-			parm.cookie_user = cookie_user;
 			jQuery.common.ajaxFileSubmit('.form', this.BASE_URL+'/auth/post', true, '/', parm);
 			/*
 			var parm = jQuery.common.getFormJson('.form');

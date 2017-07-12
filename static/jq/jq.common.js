@@ -252,16 +252,28 @@ jQuery.common = {
 	
 	//判断是否登录并作相对应的处理
 	isLogin: function(){
-		var username = jQuery.common.getCookie("cookie_user");
-		if(jQuery.common.notBlank(username)){
-			//隐藏nav的登录和注册
-			$('.brand-logo').hide();
-			return true;
-		} else {
-			//显示nav的登录和注册
-			$('.brand-logo').show();
-			return false;
-		}
+		var isLogin = false;
+		$.ajax({  
+            type:'get',  
+            cache: false,  
+            async: false,
+            url: '/apis_local/isLogin', 
+            data:{},
+            dataType : 'json', //返回值类型 一般设置为json  
+            success : function(data, status) { 
+	        	if(data.errorNo==200){
+	        		$('.brand-logo').hide();
+	        		isLogin = true;
+				} else {
+					$('.brand-logo').show();
+					isLogin = false;
+				}
+	        },  
+	        error : function(data, status, e) {  
+	        	alert(data.errorInfo); 
+	        }   
+        });
+        return isLogin;
 	},
 	
 	//获取地址栏参数

@@ -21,7 +21,6 @@ export default {
   },
   mounted: function () {
 	document.title="帮助中心";
-	jQuery.common.isLogin();
   }
 }
 </script>

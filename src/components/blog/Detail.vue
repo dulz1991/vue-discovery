@@ -123,7 +123,6 @@ export default {
     }
   },
   mounted: function () {
-	jQuery.common.isLogin();
 	this.getDetail();
 	//this.getCommentList();
   },
@@ -131,7 +130,6 @@ export default {
 		getDetail: function () {
 			var parm = {};
 			parm.id=jQuery.common.getQueryString("id");
-			parm.cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
 			this.$http.get(this.BASE_URL+'/discoveryDetail', {params: parm}).then(function(res) {
 				if(res.data.errorNo==404){
 					self.location='/Notfound';

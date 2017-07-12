@@ -15,21 +15,15 @@ export default {
   name: 'userCenterIndex',
   data () {
     return {
-    	title: '设置',
-      	isLogin : ''
+    	title: '设置'
     }
   },
    mounted: function () {
 		document.title=this.title;
-		this.isLogin = jQuery.common.isLogin();
 		this.init();
    },
   methods: {
 	init: function(){
-		if(!this.isLogin){
-			self.location='/login';
-			return;
-		}
 	},
 	doLogout: function(){
 		jQuery.common.deleteCookie(this.COOKIE_USERNAME);

@@ -24,13 +24,11 @@ export default {
   },
    mounted: function () {
 		document.title= this.title;
-		jQuery.common.isLogin();
 		this.init();
    },
   methods: {
 	init: function(){
 		var parm = {};
-		parm.cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);;
 		parm.pageNo=1;
 		this.$http.get(this.BASE_URL+'/user/myComment', {params: parm}).then(function(res) {
 			this.items = res.data.page.list;
