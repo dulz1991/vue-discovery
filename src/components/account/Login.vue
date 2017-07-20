@@ -57,7 +57,7 @@ export default {
           Materialize.toast(res.data.tip, 500);
           var redirectUrl = jQuery.common.getQueryString("redirectUrl");
           if(jQuery.common.notBlank(redirectUrl)){
-            setTimeout("self.location='/';",500);  
+            setTimeout("self.location='/user/index';",500);  
           } else {
             setTimeout("self.location='/user/index';",500);  
           }

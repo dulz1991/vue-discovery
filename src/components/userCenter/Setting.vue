@@ -32,8 +32,13 @@ export default {
 	init: function(){
 	},
 	doLogout: function(){
-		jQuery.common.deleteCookie(this.COOKIE_USERNAME);
-		self.location='/';
+		this.$http.get(this.BASE_URL+'/logout').then(function(res) {
+			if(res.data.errorNo==200){
+				self.location='/';
+			} else {
+				Materialize.toast(res.data.errorInfo, 3000);
+			}			
+		});
 	}
   }
 }
