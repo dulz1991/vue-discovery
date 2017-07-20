@@ -1,5 +1,7 @@
 <template>
 	<div class="row">
+		<navbar ref="navbar" title="上传头像"></navbar>
+
 		<vueHeadTitle :value="title"></vueHeadTitle>
 			
 		<form class="form">
@@ -28,17 +30,20 @@
 
 <script>
 import vueHeadTitle from '@/components/include/Title'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'uploadAvatar',
   data () {
     return {
-    	title: '上传头像'
+    	
     }
   },
    mounted: function () {
-		document.title=this.title;
 		this.init();
    },
+   components:{
+  	navbar
+  },
   methods: {
 	init: function(){
 		

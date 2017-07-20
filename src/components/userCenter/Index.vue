@@ -1,6 +1,7 @@
 <template>
 	<div class="row">
-		
+		<navbar ref="navbar" title="用户中心"></navbar>
+
 		<br>
 		<div class="col s12">
 			  <div class="row valign-wrapper">
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'userCenterIndex',
   data () {
@@ -49,6 +51,9 @@ export default {
 		document.title="用户中心";
 		this.init();
    },
+   components:{
+  	navbar
+  },
   methods: {
 	init: function(){
 		this.$http.get(this.BASE_URL+'/user/index').then(function(res) {

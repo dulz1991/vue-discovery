@@ -1,5 +1,6 @@
 <template>
 	<div class="row">
+		<navbar ref="navbar" title="我要反馈"></navbar>
 		<vueHeadTitle :value="title"></vueHeadTitle>
 
 		<h4>暂时也没有什么好反馈的...</h4>
@@ -9,6 +10,7 @@
 
 <script>
 import vueHeadTitle from '@/components/include/Title'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'feedback',
   data () {
@@ -20,6 +22,9 @@ export default {
 		document.title=this.title;
 		this.init();
    },
+   components:{
+  	navbar
+  },
   methods: {
 	init: function(){
 		

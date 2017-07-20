@@ -1,5 +1,7 @@
 <template>
 	<div class="row">
+		<navbar ref="navbar" title="设置"></navbar>
+
 		<vueHeadTitle :value="title"></vueHeadTitle>
 
 		<div class="collection">
@@ -11,17 +13,21 @@
 
 <script>
 import vueHeadTitle from '@/components/include/Title'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'userCenterIndex',
   data () {
     return {
-    	title: '设置'
+    	
     }
   },
    mounted: function () {
-		document.title=this.title;
+		
 		this.init();
    },
+   components:{
+  	navbar
+  },
   methods: {
 	init: function(){
 	},

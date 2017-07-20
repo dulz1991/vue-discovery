@@ -1,5 +1,7 @@
 <template>
-  <div class="row" style="margin-top:10%;">
+  <div class="row" style="">
+    <navbar ref="navbar" title="登录"></navbar> 
+
     <form class="col s12 form">
 		<div class="row">
 			<h3 class="light header center-align">登录</h3>
@@ -32,6 +34,7 @@
 </template>
 
 <script>
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'Login',
   data () {
@@ -39,8 +42,11 @@ export default {
       msg: 'login'
     }
   },
+  components:{
+    navbar
+  },
   mounted: function () {
-	document.title="登录";
+	
   },
   methods: {
 		doLogin: function () {

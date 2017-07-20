@@ -1,7 +1,6 @@
 <template>
 
   <div id="home" class="">
-
   	<navbar ref="navbar" title="首页"></navbar>
 	
 	<div id="wrapper">

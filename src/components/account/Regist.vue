@@ -1,5 +1,7 @@
 <template>
-  <div class="row" style="margin-top:10%;">
+  <div class="row" style="">
+    <navbar ref="navbar" title="注册"></navbar>
+
     <form class="col s12 form">
 		<div class="row">
 			<h3 class="light header center-align">注册</h3>
@@ -32,6 +34,7 @@
 </template>
 
 <script>
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'Regist',
   data () {
@@ -40,7 +43,10 @@ export default {
     }
   },
   mounted: function () {
-	document.title="注册";
+	
+  },
+  components:{
+    navbar
   },
   methods: {
 		doRegist: function () {

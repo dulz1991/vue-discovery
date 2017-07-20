@@ -1,5 +1,6 @@
 <template>
   <div class="row">
+    <navbar ref="navbar" title="修改密码"></navbar>
     <vueHeadTitle :value="title"></vueHeadTitle>
 
     <form class="form">
@@ -32,6 +33,7 @@
 
 <script>
 import vueHeadTitle from '@/components/include/Title'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'Login',
   data () {
@@ -40,8 +42,11 @@ export default {
       msg: 'login'
     }
   },
+  components:{
+    navbar
+  },
   mounted: function () {
-	 document.title= this.title;
+	 
   },
   methods: {
 		doChange: function () {

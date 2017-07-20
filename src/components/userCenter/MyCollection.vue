@@ -1,6 +1,6 @@
 <template>
 	<div class="row">
-
+		<navbar ref="navbar" title="我收藏的"></navbar>
 		<vueHeadTitle :value="title"></vueHeadTitle>
 		
 		<div class="collection">
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'myPost',
   data () {
@@ -28,8 +29,10 @@ export default {
       	items: []
     }
   },
+  components:{
+  	navbar
+  },
    mounted: function () {
-		document.title= this.title;
 		this.init();
    },
   methods: {
