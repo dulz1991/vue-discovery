@@ -1,6 +1,7 @@
 <template>
 	<div class="row">
-		
+		<navbar ref="navbar" title="关于本站"></navbar>
+
 		<div class="row col s12">
 			<blockquote><h5 class="header">{{title}}</h5></blockquote>
 			<p>本站用于交友学习，抒发情怀（发发牢骚）。或者发表各种有意思的事情。</p>
@@ -15,6 +16,7 @@
 </template>
 
 <script>
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'about',
   data () {
@@ -22,8 +24,11 @@ export default {
       title: '关于本站'
     }
   },
+  components:{
+  	navbar
+  },
   mounted: function () {
-	document.title = this.title;
+	
   },
 }
 </script>

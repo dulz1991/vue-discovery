@@ -257,7 +257,7 @@ jQuery.common = {
             type:'get',  
             cache: false,  
             async: false,
-            url: '/apis_local/isLogin', 
+            url: '/apis/loginResult', 
             data:{},
             dataType : 'json', //返回值类型 一般设置为json  
             success : function(data, status) { 
@@ -270,7 +270,7 @@ jQuery.common = {
 				}
 	        },  
 	        error : function(data, status, e) {  
-	        	alert(data.errorInfo); 
+	        	console.log(data);
 	        }   
         });
         return isLogin;

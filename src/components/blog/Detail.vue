@@ -1,5 +1,7 @@
 <template>
 <div class="row">
+	<navbar ref="navbar"></navbar>
+
 		<input type="hidden" name="hiddenId" :value="item.id">
       <div class="col s12"><blockquote><h5 class="header">
       	{{item.title}}
@@ -13,7 +15,7 @@
 		<!-- 内容区 -->
 		<div class="col s12">
 			<div class="card-image">
-				<img :src="BASE_IMG_URL+item.imagePath" width="100%">
+				<img :src="BASE_IMG_URL+item.imagePath" v-if="item.imagePath" width="100%">
 				<!-- <span class="card-title">{{item.title}}</span> -->
 			</div>
 			<div class="card-content">
@@ -106,6 +108,7 @@
 </template>
 
 <script>
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'Detail',
   data () {
@@ -125,6 +128,9 @@ export default {
   mounted: function () {
 	this.getDetail();
 	//this.getCommentList();
+  },
+  components:{
+  	navbar
   },
   methods: {
 		getDetail: function () {
@@ -237,7 +243,7 @@ export default {
 }
 
 </script>
-<style>
+<style scoped>
 .commentArea{background-color:#eee;}
 .commentArea div{padding:2px 15px;}
 </style>

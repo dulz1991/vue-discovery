@@ -1,5 +1,6 @@
 <template>
 	<div class="row">
+		<navbar ref="navbar" title="我要发表"></navbar>
       
 		<form class="col s12 form" enctype="multipart/form-data" method="POST">
 			
@@ -49,6 +50,7 @@
 </template>
 
 <script>
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'Post',
   data () {
@@ -57,7 +59,10 @@ export default {
     }
   },
   mounted: function () {
-	document.title="我要发表";
+	
+  },
+  components:{
+  	navbar
   },
   methods: {
 		doPost: function () {

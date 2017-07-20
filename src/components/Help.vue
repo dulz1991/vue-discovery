@@ -1,6 +1,8 @@
 <template>
 	<div class="row">
 		
+		<navbar ref="navbar" title="首页"></navbar>
+
 		<div class="row col s12">
 			<blockquote><h5 class="header">{{title}}</h5></blockquote>
 			<p>1.登陆后可发表图文信息</p>
@@ -12,6 +14,7 @@
 </template>
 
 <script>
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'help',
   data () {
@@ -19,8 +22,11 @@ export default {
       title: '帮助中心'
     }
   },
+  components:{
+  	navbar
+  },
   mounted: function () {
-	document.title="帮助中心";
+	
   }
 }
 </script>
