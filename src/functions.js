@@ -125,6 +125,37 @@ export default ({
         	duration: time
       	});
       	return instance;
+    },
+    midTip:function(text,time){
+    	if(!this.notBlank(time)){
+    		time = 2000;
+    	}
+    	let instance = Toast({
+        	message: text,
+        	position: 'middle',
+        	duration: time
+      	});
+      	return instance;
+    },
+    topTip:function(text,time){
+    	if(!this.notBlank(time)){
+    		time = 2000;
+    	}
+    	let instance = Toast({
+        	message: text,
+        	position: 'top',
+        	duration: time
+      	});
+      	return instance;
+    },
+
+    /**
+     * 跳转
+     * @param  {[type]} url [description]
+     * @return {[type]}     [description]
+     */
+    jumpUrl:function(url){
+    	self.location=url;
     }
 })
 

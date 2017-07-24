@@ -70,5 +70,5 @@ function routeInteceptors(obj){
     return self.location='/login/index?redirectUrl='+window.location.href;
   }
 
-  return MyRouter.routes[url] || NotFound;
+  return MyRouter.routes[url] || MyRouter.routes['/notFount'];
 }

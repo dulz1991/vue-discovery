@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:0;margin:0">
+  <div>
   
     <mt-header title="登录">
       <a href="/" slot="left">
@@ -15,7 +15,7 @@
        <br>
        <mt-button type="primary" size="large" @click="doLogin">登录</mt-button>
        <br>
-       <mt-button plain size="large">返回首页</mt-button>
+       <mt-button plain size="large"  @click.native="jumpUrl('/')">返回首页</mt-button>
     </form>
   
   </div>
@@ -43,10 +43,10 @@ export default {
       var flag = false;
       if(this.username=='' || this.password==''){
           let tip = this.bottomTip('用户名或密码不能为空');
-          setTimeout(() => {
-            /*tip.close();*/
+          /*setTimeout(() => {
+            tip.close();
             self.location="";
-          }, 600);
+          }, 600);*/
       }
       if(flag){
         var parm = this.getFormJson('.form');
