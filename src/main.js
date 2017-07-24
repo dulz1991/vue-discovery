@@ -4,31 +4,38 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 import MyRouter from './router/index'
 import Defines from './defines'
+import Functions from './functions'
+import MintUI from 'mint-ui'
+import 'mint-ui/lib/style.css'
 
 //全局变量
 Object.keys(Defines).forEach((key)=>{
     Vue.prototype[key] = Defines[key];
 })
+//全局方法
+Object.keys(Functions).forEach((key)=>{
+    Vue.prototype[key] = Functions[key];
+})
 
 //Vue.use(router)
-Vue.use(VueResource);
+Vue.use(VueResource)
+Vue.use(MintUI)
 
-Vue.http.options.emulateJSON = true;
+Vue.http.options.emulateJSON = true
 //Vue.http.options.xhr = { withCredentials: true };
 //Vue.http.options.credentials = true;
-Vue.http.options.crossOrigin = true;
-Vue.http.options.emulateHTTP = true;
+Vue.http.options.crossOrigin = true
+Vue.http.options.emulateHTTP = true
 
 /*是否开启页面错误提示，默认为true*/
 //Vue.config.productionTip = false
 
-Vue.http.interceptors.push((request, next)  =>{  
-  /*request.headers.set('AuthKey', 'ssh')*/
+//拦截
+/*Vue.http.interceptors.push((request, next)  =>{  
   next((response) => {
     return response; 
   });
-
-});  
+});  */
 
 /*
 new Vue({
@@ -48,7 +55,7 @@ new Vue({
   },
   computed: {
     ViewComponent () {
-    return routeInteceptors(this)
+      return routeInteceptors(this)
       /*return MyRouter.routes[this.currentRoute] || NotFound*/
     }
   },
@@ -57,12 +64,11 @@ new Vue({
 
 function routeInteceptors(obj){
   let url = obj.currentRoute;
-  if(url.indexOf('/user')==0){
-    let isLogin = jQuery.common.isLogin();  
-    if(!isLogin){
-      self.location = "/login?redirectUrl=" +window.location.href;
-      return;
-    }  
+
+  var result = Vue.prototype.urlInteceptor(url);
+  if(result=='noLogin'){ //闇€瑕佺櫥褰?
+    return self.location='/login/index?redirectUrl='+window.location.href;
   }
+
   return MyRouter.routes[url] || NotFound;
 }

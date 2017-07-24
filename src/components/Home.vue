@@ -80,7 +80,7 @@ export default {
 			self.location="/detail?id="+id;
 		},
 		getList: function () {
-			this.$http.get(this.BASE_URL+'/discoveryList').then(function(res) {
+			this.$http.get(this.BASE_URL+'/discovery/getList').then(function(res) {
 				this.items=res.data.list;
             }, function(res) {
             	console.log(res.data)

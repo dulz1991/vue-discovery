@@ -1,73 +1,79 @@
 <template>
-  <div class="row" style="">
-    <navbar ref="navbar" title="登录"></navbar> 
+  <div style="padding:0;margin:0">
+  
+    <mt-header title="登录">
+      <a href="/" slot="left">
+        <mt-button icon="back">返回</mt-button>
+      </a>
+      <!-- <mt-button icon="more" slot="right"></mt-button> -->
+    </mt-header>
 
-    <form class="col s12 form">
-		<div class="row">
-			<h3 class="light header center-align">登录</h3>
-		</div>
-	
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="last_name" type="text" name="username" class="validate">
-          <label for="last_name">昵称</label>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="password" name="password" type="password" class="validate">
-          <label for="password">密码</label>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col s12">
-          <div class="input-field inline">
-            <a class="waves-effect waves-light btn" v-on:click="doLogin">登录</a>
-			<a href="/" class="waves-effect waves-light waves-orange btn" style="background-color:#aaa;">首页</a>
-          </div>
-        </div>
-      </div>
+    <form class="form" action="javascript:;">
+        <h2>登录</h2>
+	     <mt-field label="手机号" placeholder="请输入手机号" type="tel" name="username" v-model="username"></mt-field> 
+       <mt-field label="密码" placeholder="请输入密码" type="password" name="password" v-model="password"></mt-field>	  
+       <br>
+       <mt-button type="primary" size="large" @click="doLogin">登录</mt-button>
+       <br>
+       <mt-button plain size="large">返回首页</mt-button>
     </form>
+  
   </div>
 </template>
 
 <script>
-import navbar from '@/components/include/Navbar'
+import {Header, Field, Button, Toast} from 'mint-ui';
 export default {
   name: 'Login',
   data () {
     return {
+      username:'',
+      password:'',
       msg: 'login'
     }
   },
   components:{
-    navbar
+    /*vueheader:Header*/
   },
   mounted: function () {
-	
+	 
   },
   methods: {
 		doLogin: function () {
-			var parm = jQuery.common.getFormJson('.form');
-			console.log(parm);
-			this.$http.post(this.BASE_URL+'/doLogin',parm).then(function(res) {
-				if(res.data.errorNo==200){
-          Materialize.toast(res.data.tip, 500);
-          var redirectUrl = jQuery.common.getQueryString("redirectUrl");
-          if(jQuery.common.notBlank(redirectUrl)){
-            setTimeout("self.location='/user/index';",500);  
+      var flag = false;
+      if(this.username=='' || this.password==''){
+          let tip = this.bottomTip('用户名或密码不能为空');
+          setTimeout(() => {
+            /*tip.close();*/
+            self.location="";
+          }, 600);
+      }
+      if(flag){
+        var parm = this.getFormJson('.form');
+        console.log(parm);
+        this.$http.post(this.BASE_URL+'/account/doLogin',parm).then(function(res) {
+          if(res.data.errorNo==200){
+            this.bottomTip(res.data.tip);
+            var redirectUrl = this.getQueryString("redirectUrl");
+            if(this.notBlank(redirectUrl)){
+              setTimeout(() => {self.location=redirectUrl;}, 600);
+            } else {
+              setTimeout(() => {self.location='/user/index';}, 600);
+            }
           } else {
-            setTimeout("self.location='/user/index';",500);  
+            this.bottomTip(res.data.errorInfo);
           }
-				} else {
-					Materialize.toast(res.data.errorInfo, 3000);
-				}
-      }, function(res) {
-				Materialize.toast(res.data.errorInfo, 3000);
-      });
+        }, function(res) {
+          this.bottomTip(res.data.errorInfo);
+        });
+      }
+			
 		}
 	}
 }
 </script>
+
+<style type="text/css" scoped="">
+h2{text-align: center;}
+.form{margin-top:80px;}
+</style>
