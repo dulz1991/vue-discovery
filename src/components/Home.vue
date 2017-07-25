@@ -1,99 +1,119 @@
 <template>
 
   <div>
-	<mt-header title="首页">
+	<mt-header fixed title="首页">
       <!-- <a href="/" slot="left">
         <mt-button icon="back">返回</mt-button>
       </a> -->
+      <mt-button v-if="!isLogin" slot="right">
+      	<a href="/login" class="link-btn">登录</a>
+      </mt-button>
     </mt-header>
-
+	<br><br>
 	<mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" 
-		:bottom-all-loaded="allLoaded" 
 		@top-status-change="handleTopChange" @bottom-status-change="handleBottomChange"
 	 	ref="loadmore">
-	 	<!-- <mt-cell v-for="item in items" :title="item.title" :value="item.createTimeStr"></mt-cell> -->
 		<div v-for="item in items" class="item">
 			<div>
-				<img :src="BASE_IMG_URL+item.avatar">
-				{{item.userId}}
+				<img :src="BASE_IMG_URL+item.avatar" class="avatar">
+				<span class="item-head">{{item.username}}</span>
 			</div>
-			<img v-if="item.hasImg" :src="BASE_IMG_URL+item.imagePath">
+			<div>{{item.content}}</div>
+			<div><img v-if="item.hasImg" :src="BASE_IMG_URL+item.imagePath" class="imgList"></div>
+			<div class="footer">
+				<span>评论: {{item.commentCount}}</span>
+				<span>收藏: {{item.collectionCount}}</span>
+			</div>
 		</div>
 	  	<div slot="top" class="mint-loadmore-top">
 	    	<span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓下拉释放刷新</span>
-	      	<span v-show="topStatus === 'loading'">Loading...</span>
+	      	<span v-show="topStatus === 'loading'"><mt-spinner type="snake">Loading...</mt-spinner></span>
 	  	</div>
-	  	<div slot="bottom" class="mint-loadmore-bottom">
+	  	<div slot="bottom" class="mint-loadmore-bottom" style="margin-bottom: 0px;">
 	      	<span v-show="bottomStatus !== 'loading'" :class="{ 'rotate': bottomStatus === 'drop' }">↑上拉释放刷新</span>
-	      	<span v-show="bottomStatus === 'loading'">Loading...</span>
+	      	<span v-show="bottomStatus === 'loading'"><mt-spinner type="snake">Loading...</mt-spinner></span>
 	  	</div>
 	</mt-loadmore>
-
-	<!-- <div id="wrapper">
-		<div id="scroller">
-		
-			<div id="pullDown">
-				<span class="pullDownIcon"></span>
-				<span class="pullDownLabel">数据刷新于：{{currentDatetime}}</span>
-			</div>
 	
-			<div class="row" id="thelist">
-				<div class="col s12 m6" v-for="item in items" style="padding:0;">
-					<div id="" class="waves-effect white" @click="viewDetail(item.id)" style="text-align:left;width:100%;padding:10px 20px;margin-top:2px;">
-					    <div class="" style="">
-					      <blockquote><h6 class="header">{{item.title}}</h6></blockquote>
-					      <img :src="BASE_IMG_URL+item.imagePath" v-if="item.hasImg" style="width:100%;" class="materialboxed">
-					      <p>{{item.content}}</p>
-					    </div>
-					    <div style="border-top:0px solid #eee;padding-top:0px;color:#aaa;">
-					      	<span>{{item.userId}}</span> | 
-					      	<span>{{item.createTimeStr}}</span>
-					    </div>
-					  </div>
-				</div>
-			</div>	
-	
-		</div>
-	</div> -->
-
+	<tabbar></tabbar>
 		
   </div>
 </template>
 
 <script>
-import { Loadmore, Header, Lazyload,Swipe, SwipeItem } from 'mint-ui';
+import { Loadmore, Header, Lazyload,Swipe, SwipeItem, Spinner, Indicator } from 'mint-ui'
+import tabbar from '@/components/include/Tabbar'
 export default {
 	name: 'app',
   	data () {
     	return {
     		items:[],
     		topStatus: '',
-    		bottomStatus:''
+    		bottomStatus:'',
+    		isLogin: true
     	}
   	},
   	components:{
-  		loadmore: Loadmore
+  		loadmore: Loadmore,
+  		tabbar
   	},
   	mounted: function () {
 		this.init();
   	},
   	methods: {
 		init: function(){
+			Indicator.open({
+				text: '加载中...',
+				 spinnerType: 'fading-circle'
+			});
 			this.$http.get(this.BASE_URL+'/discovery/getList').then(function(res) {
-				this.items=res.data.list;
+				this.isLogin = res.data.isLogin;
+				Indicator.close();
+				if(res.data.errorNo==200){
+					this.items=res.data.list;	
+				} else {
+					this.midTip(res.data.errorInfo);
+				}
             }, function(res) {
             	console.log(res.data);
             	this.midTip(res.data.error);
             });
 		},
 		loadTop: function(){
-			setTimeout(() => {this.$refs.loadmore.onTopLoaded();}, 2000);
+			var parm = {};
+			parm.type=2;
+			parm.discoveryId = this.items[0].id;
+			setTimeout(() => {this.$refs.loadmore.onTopLoaded();}, 1000);
+			this.$http.get(this.BASE_URL+'/discovery/getList',{params:parm}).then(function(res) {
+				if(res.data.errorNo==200){
+					this.items = this.appendJson(res.data.list, this.items);
+				} else {
+					this.midTip(res.data.errorInfo);
+				}
+            }, function(res) {
+            	console.log(res.data);
+            	this.midTip(res.data.error);
+            });
 		},
 		loadBottom() {
+			var parm = {};
+			parm.type=1;
+			parm.discoveryId = this.items[this.items.length-1].id;
 			setTimeout(() => {
-				this.allLoaded = true;
-		  		this.$refs.loadmore.onBottomLoaded();
-			}, 2000);
+					/*this.allLoaded = true;*/
+			  		this.$refs.loadmore.onBottomLoaded();
+				}, 2000);
+			this.$http.get(this.BASE_URL+'/discovery/getList',{params:parm}).then(function(res) {
+				if(res.data.errorNo==200){
+					this.items = this.appendJson(res.data.list, this.items);
+				} else {
+					this.midTip(res.data.errorInfo);
+				}
+				
+            }, function(res) {
+            	console.log(res.data);
+            	this.midTip(res.data.error);
+            });
 		},
 		handleTopChange(status) {
 	    	this.topStatus = status;
@@ -105,7 +125,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -114,6 +134,13 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-.item{background-color: #fff;padding:10px;}
-img{width: 100px;}
+.item{background-color: #fff;padding:10px;margin-bottom:1px;}
+.item div{padding:6px 2px;}
+.item .item-head{position:relative;top:-12px;}
+.item .footer{color: #aaa;}
+.imgList{width: 150px;}
+.avatar{width:40px;border-radius: 20px;}
+.mint-spinner-snake{margin: auto auto;}
+.mint-tabbar{}
+.link-btn{color:#fff; text-decoration: none;}
 </style>

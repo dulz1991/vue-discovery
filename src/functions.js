@@ -156,6 +156,19 @@ export default ({
      */
     jumpUrl:function(url){
     	self.location=url;
-    }
+    },
+
+    /**
+     * 拼接json列表
+     * @param  {[type]} source      [description]
+     * @param  {[type]} destination [description]
+     * @return {[type]}             [description]
+     */
+    appendJson: function(source, destination){
+		for(var property in source){
+			destination.push(source[property])
+		}
+		return destination;
+	}
 })
 

@@ -2,9 +2,12 @@
   <div>
 
     <mt-header title="注册">
-      <a href="/" slot="left">
+      <!-- <a href="/" slot="left">
         <mt-button icon="back">返回</mt-button>
-      </a>
+      </a> -->
+      <mt-button slot="right">
+        <a href="/login" class="link-btn">登录</a>
+      </mt-button>
       <!-- <mt-button icon="more" slot="right"></mt-button> -->
     </mt-header>
 
@@ -17,6 +20,8 @@
        <mt-button type="primary" size="large" @click="doRegist">注册</mt-button>
        <br>
        <mt-button plain size="large"  @click.native="jumpUrl('/')">返回首页</mt-button>
+       <br>
+       <p style="text-align:center">已有账号 <a href="/login" class="link-btn" style="color:#aaa">去登录</a></p>
     </form>
 
   </div>
@@ -65,7 +70,8 @@ export default {
 }
 </script>
 
-<style type="text/css" scoped="">
+<style type="text/css" scoped>
 h2{text-align: center;}
 .form{margin-top:80px;}
+.link-btn{color:#fff; text-decoration: none;}
 </style>
