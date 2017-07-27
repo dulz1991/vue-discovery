@@ -67,7 +67,7 @@ function routeInteceptors(obj){
 
   var result = Vue.prototype.urlInteceptor(url);
   if(result=='noLogin'){ //闇€瑕佺櫥褰?
-    return self.location='/login/index?redirectUrl='+window.location.href;
+    return self.location='/login?redirectUrl='+window.location.href;
   }
 
   return MyRouter.routes[url] || MyRouter.routes['/notFount'];

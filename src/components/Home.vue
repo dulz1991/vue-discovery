@@ -13,7 +13,7 @@
 	<mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" 
 		@top-status-change="handleTopChange" @bottom-status-change="handleBottomChange"
 	 	ref="loadmore">
-		<div v-for="item in items" class="item">
+		<div v-for="item in items" class="item" @click="viewDetail(item.id)">
 			<div>
 				<img :src="BASE_IMG_URL+item.avatar" class="avatar">
 				<span class="item-head">{{item.username}}</span>
@@ -27,11 +27,12 @@
 		</div>
 	  	<div slot="top" class="mint-loadmore-top">
 	    	<span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓下拉释放刷新</span>
-	      	<span v-show="topStatus === 'loading'"><mt-spinner type="snake">Loading...</mt-spinner></span>
+	      	<span class="center" v-show="topStatus === 'loading'">Loading...</span>
 	  	</div>
 	  	<div slot="bottom" class="mint-loadmore-bottom" style="margin-bottom: 0px;">
 	      	<span v-show="bottomStatus !== 'loading'" :class="{ 'rotate': bottomStatus === 'drop' }">↑上拉释放刷新</span>
-	      	<span v-show="bottomStatus === 'loading'"><mt-spinner type="snake">Loading...</mt-spinner></span>
+	      	<span v-show="bottomStatus === 'loading'">Loading...</span>
+	      	<!-- <span v-show="bottomStatus === 'loading'"><mt-spinner type="snake">Loading...</mt-spinner></span> -->
 	  	</div>
 	</mt-loadmore>
 	
@@ -58,6 +59,7 @@ export default {
   		tabbar
   	},
   	mounted: function () {
+  		document.title='首页';
 		this.init();
   	},
   	methods: {
@@ -95,7 +97,7 @@ export default {
             	this.midTip(res.data.error);
             });
 		},
-		loadBottom() {
+		loadBottom: function() {
 			var parm = {};
 			parm.type=1;
 			parm.discoveryId = this.items[this.items.length-1].id;
@@ -115,11 +117,14 @@ export default {
             	this.midTip(res.data.error);
             });
 		},
-		handleTopChange(status) {
+		handleTopChange: function(status) {
 	    	this.topStatus = status;
 	    },
-	    handleBottomChange(status) {
+	    handleBottomChange: function(status) {
 	    	this.bottomStatus = status;
+	    },
+	    viewDetail: function(id){
+	    	self.location='/detail?id='+id;
 	    }
 	}
 }
@@ -139,8 +144,7 @@ export default {
 .item .item-head{position:relative;top:-12px;}
 .item .footer{color: #aaa;}
 .imgList{width: 150px;}
-.avatar{width:40px;border-radius: 20px;}
-.mint-spinner-snake{margin: auto auto;}
 .mint-tabbar{}
-.link-btn{color:#fff; text-decoration: none;}
+.mint-spinner-snake{margin: auto auto;}
+.center{text-align: center;}
 </style>

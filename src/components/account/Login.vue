@@ -45,8 +45,9 @@ export default {
   },
   methods: {
 		doLogin: function () {
-      var flag = false;
+      var flag = true;
       if(this.username=='' || this.password==''){
+          flag = false;
           let tip = this.bottomTip('用户名或密码不能为空');
           /*setTimeout(() => {
             tip.close();
@@ -54,11 +55,13 @@ export default {
           }, 600);*/
       }
       if(flag){
-        var parm = this.getFormJson('.form');
+        var parm = {};
+        parm.username = this.username;
+        parm.password = this.password;
         console.log(parm);
         this.$http.post(this.BASE_URL+'/account/doLogin',parm).then(function(res) {
           if(res.data.errorNo==200){
-            this.bottomTip(res.data.tip);
+            this.bottomTip('登录成功');
             var redirectUrl = this.getQueryString("redirectUrl");
             if(this.notBlank(redirectUrl)){
               setTimeout(() => {self.location=redirectUrl;}, 600);

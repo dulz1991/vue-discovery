@@ -1,114 +1,80 @@
 <template>
-<div class="row">
-	<navbar ref="navbar"></navbar>
+<div>
+	<mt-header fixed title="">
+      	<a href="/" slot="left">
+        	<mt-button icon="back">返回</mt-button>
+      	</a>
+      	<mt-button v-if="!isLogin" slot="right">
+      		<a href="/login" class="link-btn">登录</a>
+      	</mt-button>
+    </mt-header>
+    <br><br>
 
-		<input type="hidden" name="hiddenId" :value="item.id">
-      <div class="col s12"><blockquote><h5 class="header">
-      	{{item.title}}
-      	</h5> </blockquote></div>
-      <div class="col s6">
-      	<img :src="BASE_IMG_URL + item.avatar" style="width:32px;border-radius:40px;">
-      	<span style="position:relative;top:-10px;">{{item.username}}</span>
-      </div>
-      <div class="col s6"><span class="flow-text">{{item.createTimeStr}}</span></div>
-	
-		<!-- 内容区 -->
-		<div class="col s12">
-			<div class="card-image">
-				<img :src="BASE_IMG_URL+item.imagePath" v-if="item.imagePath" width="100%">
-				<!-- <span class="card-title">{{item.title}}</span> -->
-			</div>
-			<div class="card-content">
-				{{item.content}}
-			</div>
+    <div class="item">
+		<div>
+			<img :src="BASE_IMG_URL+item.avatar" class="avatar">
+			<span class="item-head">{{item.username}}</span>
 		</div>
+		<div>{{item.content}}</div>
+		<div>
+			<img v-lazy="BASE_IMG_URL+item.imagePath" v-if="item.imagePath" width="98%">
+			<!-- <img :src="BASE_IMG_URL+item.imagePath" v-if="item.imagePath" width="98%"> -->
+		</div>
+		<div class="footer">
+			<span>{{item.createTimeStr}} | </span>
+			<span>评论:{{item.commentCount}} | </span>
+			<span>收藏:{{item.collectionCount}}</span>
+		</div>
+	</div>
 		
-		<!-- 评论区 -->
-		<div class="col s12" id="commentList" style="margin-top:10px;border-top:1px solid #ddd;margin-bottom:60px;">
-			<div style="padding-top:15px;" class="commentItem" :id="'commentItem'+c.id" v-for="c in commentList" :commentId="c.id">
-				<div class="chip">
-					<img :src="BASE_IMG_URL + c.fromAvatar" alt="Contact Person">
-					{{c.fromName}}
-					<span style="padding-left:10px;">{{c.createTimeStr}}</span>
+	<!-- 评论区 -->
+	<br>
+	<p style="padding:0;margin:0 0 5px 10px;">评论 {{item.commentCount}}</p>
+	<div id="commentList">
+		<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+			<li v-for="c in commentList" style="border-bottom:1px solid #eee;padding-bottom:5px;">
+				<div>
+					<img :src="BASE_IMG_URL+c.fromAvatar" class="avatar">
+					<span class="item-head">{{c.fromName}}</span>
 				</div>
-				<div :commentId="c.id" :fromId="c.fromId" :fromName="c.fromName" :discoveryId="c.discoveryId" v-on:click="showModal($event)">{{c.messageContent}}</div>
-					
-					<!-- 评论的评论列表 -->
-					<div class="commentArea">
-						<div v-for="c1 in c.commentList">
-							{{c1.fromName}}： {{c1.messageContent}}
+				<div>{{c.messageContent}}</div>
+				<ul>
+					<li  v-for="d in c.commentList">
+						<div>
+							<img :src="BASE_IMG_URL+d.fromAvatar" class="avatar">
+							<span class="item-head">{{d.fromName}}</span>
 						</div>
-					</div>
-			</div>
-		</div>
-		<div style="margin-top:15px;" v-if="hasComment">
-			<h5 class="center-align" v-on:click="getCommentList">查看更多</h5>
-		</div>
-		<div style="margin-top:15px;" >
-			<h5 class="center-align">&nbsp;</h5>
-		</div>
-			
-	<!--
-	<div class="fixed-action-btn toolbar">
-    <a class="btn-floating btn-large grey lighten-1">
-      <i class="large material-icons">mode_edit</i>
-    </a>
-    <ul>
-      <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">insert_chart</i></a></li>
-      <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">format_quote</i></a></li>
-      <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">publish</i></a></li>
-      <li class="waves-effect waves-light"><a href="#!"><i class="material-icons">attach_file</i></a></li>
-    </ul>
-  </div>
-  -->
-	
-	
-	<div class="fixed-action-btn toolbar active" data-origin-bottom="617" data-origin-left="281" data-origin-width="56" data-open="true" style="text-align: center; width: 100%; bottom: 0px; left: 0px; transition: transform 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53), background-color 0s linear 0.2s; overflow: hidden; background-color: rgb(189, 189, 189);">
-		<a class="btn-floating btn-large grey lighten-1" style="transition: transform 0.2s; overflow: visible;">
-			<i class="large material-icons">mode_edit</i>
-			<div class="fab-backdrop" style="transform: scale(9); transition: transform 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19); background-color: rgb(189, 189, 189);"></div>
-		</a>
-		<ul>
-			<li class="waves-effect waves-light">
-				<a href="#!" style="opacity: 1;">
-				<form class="form">
-					<input type="hidden" name="discoveryId" :value="item.id" />
-					<input id="messageContent" type="text" class="messageContent" name="messageContent" 
-					style="background-color:#fff;color:#666;width:75%;margin:2 4px;border-radius:20px;padding-left:6px;"
-					placeholder="发表评论"	value="">
-					<span style="margin-left:10px;" v-on:click="doComment">发表</span>
-					<span style="margin-left:10px;" :discoveryId="item.id" v-on:click="doCollection($event)">
-						<i class="fa fa-star-o" v-if="!hasCollected"></i>
-						<i class="fa fa-star" style="color:yellow" v-if="hasCollected"></i>
-					</span>
-				</form>
-				</a>
+						<div>{{d.messageContent}}</div>	
+					</li>
+				</ul>
 			</li>
-		</ul> 
+		</ul>
 	</div>
-
-	
-	<div id="modal1" class="modal bottom-sheet">
-	    <div class="modal-content">
-		    <form class="replyForm">
-				<input type="hidden" name="toId" :value="toId" />
-				<input type="hidden" name="commentId" :value="commentId" />
-				<input type="hidden" name="discoveryId" :value="discoveryId" />
-		      	<input type="text" name="messageContent" value="" :placeholder="'回复:'+replyToName" />
-	      	</form>
-	    </div>
-	    <div class="modal-footer">
-	      <a href="#!" v-on:click="commentSubmit" class="modal-action modal-close waves-effect waves-green btn-flat">提交</a>
-	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
-	    </div>
+	<div style="margin-bottom:60px; text-align:center;">
+		<p v-if="!hasComment">没有更多了</p>
 	</div>
 	
+	<!-- 底部栏 -->
+	<mt-tabbar fixed v-model="selected">
+      	<mt-tab-item>
+      		<div id="comment-bar">
+	      		<span><input type="text" name="" placeholder="输入评论内容"></span>
+	      		<span><img :src="this.BASE_IMG_URL + '/img/upload_24.png'"></span>
+	      		<span>
+	      			<img :src="this.BASE_IMG_URL + '/img/star_black_24.png'" v-if="!hasCollected" 
+	      			@click="addCollection">
+	      			<img :src="this.BASE_IMG_URL + '/img/star_red_24.png'" v-if="hasCollected"
+	      			@click="cancelCollection">
+	      		</span>
+      		</div>
+      	</mt-tab-item>
+    </mt-tabbar>
 	
 </div>
 </template>
 
 <script>
-import navbar from '@/components/include/Navbar'
+import { Header, Toast, Tabbar, TabItem, Field, Lazyload, InfiniteScroll } from 'mint-ui'
 export default {
   name: 'Detail',
   data () {
@@ -126,56 +92,95 @@ export default {
     }
   },
   mounted: function () {
+  	document.title='详情页';
 	this.getDetail();
 	//this.getCommentList();
   },
   components:{
-  	navbar
+  	
   },
   methods: {
 		getDetail: function () {
 			var parm = {};
-			parm.id=jQuery.common.getQueryString("id");
-			this.$http.get(this.BASE_URL+'/discoveryDetail', {params: parm}).then(function(res) {
+			parm.id=this.getQueryString("id");
+			this.$http.get(this.BASE_URL+'/discovery/getDetail', {params: parm}).then(function(res) {
 				if(res.data.errorNo==404){
 					self.location='/Notfound';
 				}
 				this.item=res.data.detail;
 				this.hasCollected=res.data.hasCollected;
-				document.title = res.data.detail.title;
-				
 				this.getCommentList();
             }, function(res) {
-				Materialize.toast(res.data.error, 3000);
+            	this.midTip(res.data.error);
             });
 		},
 		getCommentList: function () {
 			var _this = this;
 			var parm = {};
-			//最后一个评论
-			var lastIndex = $('#commentList').find('div.commentItem').length;
-			if(lastIndex>0){
-				var commentId = $('#commentList').find('div.commentItem').eq(lastIndex-1).attr('commentId');
-				parm.id=commentId;
-				parm.type='down';
-			}
-			//这条评论的id
-			var discoveryId = _this.item.id;
-			parm.discoveryId = discoveryId;
+			parm.discoveryId = _this.item.id;
 			this.$http.get(this.BASE_URL+'/getCommentList', {params: parm}).then(function(res) {
+				if(res.data.list != undefined){
+					this.commentList = res.data.list;	
+				}
 				if(res.data.list != undefined && res.data.list.length>=res.data.pageSize){
 					this.hasComment = true;
 				} else {
 					this.hasComment = false;
 				}
-				if(res.data.list != undefined && res.data.list.length>=0){
-					this.commentList = jQuery.common.appendJson(res.data.list, this.commentList);
-				}
             }, function(res) {
-				Materialize.toast(res.data.error, 3000);
+				this.bottomTip(res.data.error);
             });
 		},
-		doComment : function(){
+		loadMore: function() {
+			var parm = {};
+			parm.type='down';
+			parm.discoveryId = this.item.id;
+			this.$http.get(this.BASE_URL+'/getCommentList', {params: parm}).then(function(res) {
+				if(res.data.list != undefined){
+					this.commentList = res.data.list;	
+				}
+				if(res.data.list != undefined && res.data.list.length>=res.data.pageSize){
+					this.hasComment = true;
+				} else {
+					this.hasComment = false;
+				}
+            }, function(res) {
+				this.bottomTip(res.data.error);
+            });
+		},
+		addCollection: function(){
+			var parm = {};
+			parm.discoveryId = this.item.id;
+			this.$http.post(this.BASE_URL+'/addDiscoveryCollection', parm).then(function(res) {
+				if(res.data.errorNo==200){
+					this.hasCollected = true;
+					this.bottomTip(res.data.errorInfo);
+				} else if(res.data.errorNo==400) {
+					self.location="/login?redirectUrl="+window.location.href;
+				} else {
+					this.bottomTip(res.data.errorInfo);
+				}
+		      }, function(res) {
+		      	this.bottomTip(res.data.error);
+		      });
+		},
+		cancelCollection: function() {
+			var parm = {};
+			parm.discoveryId = this.item.id;
+			this.$http.post(this.BASE_URL+'/cancelDiscoveryCollection', parm).then(function(res) {
+				if(res.data.errorNo==200){
+					this.hasCollected = false;
+					this.bottomTip(res.data.errorInfo);
+				} else if(res.data.errorNo==400) {
+					self.location="/login?redirectUrl="+window.location.href;
+				} else {
+					this.bottomTip(res.data.errorInfo);
+				}
+		      }, function(res) {
+		      	this.bottomTip(res.data.error);
+		      });
+		}
+		/*doComment : function(){
 			var messageContent = $('input[name="messageContent"]').val();
 			var parm = jQuery.common.getFormJson('.form');
 			var cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
@@ -222,28 +227,26 @@ export default {
 					Materialize.toast(res.data.error, 3000);
 		      });
 		},
-		doCollection: function(obj){
-			var parm = {};
-			parm.cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
-			parm.discoveryId = $(obj.target).parent().attr('discoveryId');
-			this.$http.post(this.BASE_URL+'/auth/addDiscoveryCollection', parm).then(function(res) {
-				if(res.data.errorNo==200){
-					$(obj.target).parent().html('<i class="fa fa-star"></i>');
-					Materialize.toast(res.data.errorInfo, 3000);
-				} else if(res.data.errorNo==400) {
-					self.location="/login";
-				} else {
-					Materialize.toast(res.data.errorInfo, 3000);
-				}
-		      }, function(res) {
-					Materialize.toast(res.data.error, 3000);
-		      });
-		}
+		*/
 	}
 }
 
 </script>
 <style scoped>
+.item{background-color: #fff;padding:10px;margin-bottom:1px;}
+.item div{padding:6px 2px;}
+.item .item-head{position:relative;top:-12px;}
+.item .footer{color: #aaa;}
+
+#commentList{background-color: #fff;padding:2px;}
+#commentList ul{list-style:none;margin-left:-25px;}
+#commentList ul li{margin-bottom: 20px;}
+
 .commentArea{background-color:#eee;}
 .commentArea div{padding:2px 15px;}
+.mint-tab-item{padding:0;}
+#comment-bar{background-color: #fff;}
+#comment-bar span{margin-left:10px;}
+#comment-bar img{padding:10px 5px 0 5px;}
+#comment-bar input{line-height: 32px;border:0px;width: 60%;position: relative;top:-6px;}
 </style>
