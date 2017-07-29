@@ -13,7 +13,7 @@
 
     <form class="form" action="javascript:;">
         <h2>登录</h2>
-	     <mt-field label="手机号" placeholder="请输入手机号" type="tel" name="username" v-model="username"></mt-field> 
+	     <mt-field label="登录号" placeholder="请输入手机号或者昵称" type="tel" name="username" v-model="username"></mt-field> 
        <mt-field label="密码" placeholder="请输入密码" type="password" name="password" v-model="password"></mt-field>	  
        <br>
        <mt-button type="primary" size="large" @click="doLogin">登录</mt-button>
@@ -66,7 +66,7 @@ export default {
             if(this.notBlank(redirectUrl)){
               setTimeout(() => {self.location=redirectUrl;}, 600);
             } else {
-              setTimeout(() => {self.location='/user/index';}, 600);
+              setTimeout(() => {self.location='/';}, 600);
             }
           } else {
             this.bottomTip(res.data.errorInfo);

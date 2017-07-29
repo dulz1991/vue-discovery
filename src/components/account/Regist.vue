@@ -52,18 +52,20 @@ export default {
         return;
       }
 
-			var parm = this.getFormJson('.form');
-			console.log(parm);
-			this.$http.post(this.BASE_URL+'/doRegist',parm).then(function(res) {
+			var parm = {};
+      parm.username = this.username;
+      parm.password = this.password;
+      parm.mobile = this.mobile;
+			this.$http.post(this.BASE_URL+'/account/doRegist',parm).then(function(res) {
 				if(res.data.errorNo==200){
           this.bottomTip(res.data.tip);
-					setTimeout("self.location='/login';",600);
+					setTimeout("self.location='/login';",800);
 				} else {
           this.bottomTip(res.data.errorInfo);
 				}
       }, function(res) {
         console.log(res);
-        this.bottomTip(res.data);
+        this.bottomTip('注册异常');
       });
 		}
 	}

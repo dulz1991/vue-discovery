@@ -19,7 +19,7 @@
 				<span class="item-head">{{item.username}}</span>
 			</div>
 			<div>{{item.content}}</div>
-			<div><img v-if="item.hasImg" :src="BASE_IMG_URL+item.imagePath" class="imgList"></div>
+			<div><img v-if="item.hasImg" :src="MOBILE_IMG_URL+item.imagePath+'!120!120'" class="imgList"></div>
 			<div class="footer">
 				<span>评论: {{item.commentCount}}</span>
 				<span>收藏: {{item.collectionCount}}</span>

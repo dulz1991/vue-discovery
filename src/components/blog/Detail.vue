@@ -37,7 +37,7 @@
 					<img :src="BASE_IMG_URL+c.fromAvatar" class="avatar">
 					<span class="item-head">{{c.fromName}}</span>
 				</div>
-				<div>{{c.messageContent}}</div>
+				<div @click="commentForComment(c.id)">{{c.messageContent}}</div>
 				<ul>
 					<li  v-for="d in c.commentList">
 						<div>
@@ -58,8 +58,11 @@
 	<mt-tabbar fixed v-model="selected">
       	<mt-tab-item>
       		<div id="comment-bar">
-	      		<span><input type="text" name="" placeholder="输入评论内容"></span>
-	      		<span><img :src="this.BASE_IMG_URL + '/img/upload_24.png'"></span>
+	      		<span><input type="text" name="" placeholder="输入评论内容" v-model="commentContent"></span>
+	      		<span>
+	      			<img :src="this.BASE_IMG_URL + '/img/upload_24.png'" 
+	      			@click="doComment">
+	      		</span>
 	      		<span>
 	      			<img :src="this.BASE_IMG_URL + '/img/star_black_24.png'" v-if="!hasCollected" 
 	      			@click="addCollection">
@@ -69,35 +72,40 @@
       		</div>
       	</mt-tab-item>
     </mt-tabbar>
+
+    <mt-popup v-model="popupVisible" position="bottom" style="width:100%">
+  		<commentPage v-on:listenToChileEnevt="closeCommentPage" ref="commentPage"></commentPage>
+	</mt-popup>
 	
 </div>
 </template>
 
 <script>
-import { Header, Toast, Tabbar, TabItem, Field, Lazyload, InfiniteScroll } from 'mint-ui'
+import { Header, Toast, Tabbar, TabItem, Field, Lazyload, InfiniteScroll, Popup } from 'mint-ui'
+import commentPage from '@/components/include/CommentPage'
 export default {
   name: 'Detail',
   data () {
     return {
-      title : '',
-	  item : '',
-	  commentList: [],
-	  hasComment:false,
-
-	  commentId: '',
-	  toId: '',
-	  replyToName:'',
-	  discoveryId: '',
-	  hasCollected: false //是否已收藏
+    	isLogin: false,
+      	title : '',
+	  	item : '',
+	  	commentList: [], //评论列表
+	  	hasComment:false, //是否有更多评论
+	  	commentContent:'', //评论内容
+	  	hasCollected: false, //是否已收藏
+	  	
+	  	popupVisible: false
     }
   },
   mounted: function () {
   	document.title='详情页';
+  	this.isLogin=this.wasLogin();
 	this.getDetail();
 	//this.getCommentList();
   },
   components:{
-  	
+  	commentPage
   },
   methods: {
 		getDetail: function () {
@@ -132,6 +140,9 @@ export default {
             });
 		},
 		loadMore: function() {
+			if(!hasComment){
+				return;
+			}
 			var parm = {};
 			parm.type='down';
 			parm.discoveryId = this.item.id;
@@ -179,29 +190,33 @@ export default {
 		      }, function(res) {
 		      	this.bottomTip(res.data.error);
 		      });
-		}
-		/*doComment : function(){
-			var messageContent = $('input[name="messageContent"]').val();
-			var parm = jQuery.common.getFormJson('.form');
-			var cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
-			parm.cookie_user = cookie_user;
-			this.$http.post(this.BASE_URL+'/auth/discovery/doComment', parm).then(function(res) {
+		},
+		doComment : function(){
+			var parm = {};
+			parm.messageContent = this.commentContent;
+			parm.discoveryId=this.item.id;
+			parm.toId = this.item.userId;
+			this.$http.post(this.BASE_URL+'/doComment', parm).then(function(res) {
 				if(res.data.errorNo==400){
-					Materialize.toast(res.data.errorInfo, 3000);
-					setTimeout("self.location='/login';",800);
-				} else if(res.data.errorNo==404){
-					self.location='/Notfound';
-				} else if(res.data.errorNo==-1){
-					Materialize.toast(res.data.errorInfo, 3000);
-				} else {
-					$('input[name="messageContent"]').val("");
+					self.location='/login?redirectUrl='+window.location.href;
+				} else if(res.data.errorNo==200){
 					this.getCommentList();
-					// TODO
+				} else {
+					this.midTip(res.data.errorInfo);
 				}
             }, function(res) {
-				Materialize.toast(res.data.error, 3000);
+            	this.midTip(res.data.error);
             });
 		},
+		commentForComment: function(commentId) {
+			this.$refs.commentPage.commentId=commentId;
+			this.$refs.commentPage.init();
+			this.popupVisible=true;
+		},
+		closeCommentPage: function(arg) {
+			this.popupVisible=arg;
+		}
+		/*
 		showModal: function(obj){
 			this.commentId =$(obj.target).attr('commentId');
 			this.toId = $(obj.target).attr('fromId');
