@@ -1,34 +1,38 @@
 <template>
-	<div class="row">
-		<navbar ref="navbar" title="我要反馈"></navbar>
-		<vueHeadTitle :value="title"></vueHeadTitle>
-
-		<h4>暂时也没有什么好反馈的...</h4>
-		<img src="/static/images/tu1.jpg" />
+	<div>
+		<mt-header fixed title="反馈">
+        <a href="/user/index" slot="left">
+            <mt-button icon="back">返回</mt-button>
+          </a>
+          <mt-button slot="right">
+            <a href="javascript:;" class="link-btn">...</a>
+          </mt-button>
+      </mt-header>
+    <br><br>
+    
+    <div class="padding10">
+      <h4>暂时也没有什么好反馈的...</h4>
+      <img src="/static/images/tu1.jpg" />
+    </div>
+		
 	</div>
 </template>
 
 <script>
-import vueHeadTitle from '@/components/include/Title'
-import navbar from '@/components/include/Navbar'
+import { Header, Cell } from 'mint-ui'
 export default {
   name: 'feedback',
   data () {
     return {
-    	title: '我要反馈'
+    	
     }
   },
    mounted: function () {
-		document.title=this.title;
-		this.init();
    },
    components:{
-  	navbar
+  	
   },
   methods: {
-	init: function(){
-		
-	}
   }
 }
 </script>

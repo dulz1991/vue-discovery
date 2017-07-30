@@ -1,9 +1,16 @@
 <template>
-	<div class="row">
-		<navbar ref="navbar" title="关于本站"></navbar>
+	<div>
+		<mt-header fixed title="关于本站">
+        	<a href="/user/set" slot="left">
+            	<mt-button icon="back">返回</mt-button>
+          	</a>
+          	<mt-button slot="right">
+            	<a href="javascript:;" class="link-btn">...</a>
+          	</mt-button>
+      	</mt-header>
+    	<br><br>
 
-		<div class="row col s12">
-			<blockquote><h5 class="header">{{title}}</h5></blockquote>
+		<div class="padding10">
 			<p>本站用于交友学习，抒发情怀（发发牢骚）。或者发表各种有意思的事情。</p>
 			<p>大家对本站有任何意见或建议，欢迎批评指教。</p>
 			<p>
@@ -16,16 +23,16 @@
 </template>
 
 <script>
-import navbar from '@/components/include/Navbar'
+import { Header, Cell, Toast } from 'mint-ui'
 export default {
   name: 'about',
   data () {
     return {
-      title: '关于本站'
+      
     }
   },
   components:{
-  	navbar
+  	
   },
   mounted: function () {
 	

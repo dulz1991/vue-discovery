@@ -1,11 +1,11 @@
 <template>
   <div>
     <mt-tabbar fixed v-model="selected">
-      <mt-tab-item id="Home">
+      <mt-tab-item id="Home" @click.native="jumpUrl('/')">
         <img slot="icon" :src="BASE_IMG_URL+'/img/home_red.png'">
         首页
       </mt-tab-item>
-      <mt-tab-item id="Mine">
+      <mt-tab-item id="Mine" @click.native="jumpUrl('/user/index')">
         <img slot="icon" :src="BASE_IMG_URL+'/img/person_blue.png'">
         我的
       </mt-tab-item>

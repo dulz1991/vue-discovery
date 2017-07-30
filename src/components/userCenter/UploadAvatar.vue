@@ -1,23 +1,31 @@
 <template>
-	<div class="row">
-		<navbar ref="navbar" title="上传头像"></navbar>
-
-		<vueHeadTitle :value="title"></vueHeadTitle>
+	<div>
+		<mt-header fixed title="上传头像">
+	        <a href="/user/index" slot="left">
+	            <mt-button icon="back">返回</mt-button>
+	          </a>
+	          <mt-button slot="right">
+	            <a href="javascript:;" class="link-btn">...</a>
+	          </mt-button>
+	      </mt-header>
+	    <br><br><br>
 			
-		<form class="form">
+		<form class="form" action="javascripi:;">
 			<div class="row">
 	          <div class="col s12">
 	            <div class="input-field inline">
-	              <a class="waves-effect waves-light btn red" @click="triggerInput">选择文件</a>
-	              <a class="waves-effect waves-light btn" @click="doSubmit">上传</a>
-	              <a href="/user/index" class="waves-effect waves-light waves-orange btn" style="background-color:#aaa;">返回</a>
+	            	<mt-button type="default" @click="triggerInput">选择文件</mt-button>
+	            	<mt-button type="primary" @click="doSubmit">上传</mt-button>
+	              <!-- <a class="waves-effect waves-light btn red" @click="triggerInput">选择文件</a>
+	              <a class="waves-effect waves-light btn" @click="doSubmit">上传</a> -->
 	            </div>
 	          </div>
 	        </div>
 			
 			<div class="row">
 	    		<div style="margin:10px; width:200px;">
-					<input type="file" style="display:none;" name="attachFile" id="doc" multiple="multiple" onchange="jQuery.common.setImagePreviews('doc','dd');" accept="image/*" />
+					<input type="file" style="display:none;" name="attachFile" id="doc" multiple="multiple"
+					 onchange="setImagePreviews('doc','dd');" accept="image/*" />
 					<div>
 						<img width="200px" height="200px" id="dd" src="/static/images/z_add.png">
 					</div>
@@ -29,8 +37,7 @@
 </template>
 
 <script>
-import vueHeadTitle from '@/components/include/Title'
-import navbar from '@/components/include/Navbar'
+import { Header, Cell, Toast } from 'mint-ui'
 export default {
   name: 'uploadAvatar',
   data () {
@@ -38,11 +45,11 @@ export default {
     	
     }
   },
-   mounted: function () {
-		this.init();
-   },
-   components:{
-  	navbar
+  mounted: function () {
+	this.init();
+  },
+  components:{
+  	
   },
   methods: {
 	init: function(){
@@ -54,14 +61,13 @@ export default {
 		console.log(formData);
 		this.$http.post(this.BASE_URL+'/user/uploadAvatar',formData).then(function(res) {
 		    if(res.data.errorNo==200){
-		      Materialize.toast(res.data.tip, 1000);
+		      this.bottomTip('上传成功');
 		      setTimeout("self.location='/user/index';",500);
 		    } else {
-		      Materialize.toast(res.data.errorInfo, 3000);
+		    	this.bottomTip(res.data.errorInfo);
 		    }
 		  }, function(res) {
-		    console.log(res);
-		    Materialize.toast(res.data.statusText, 3000);
+		    this.bottomTip("获取数据异常")
 		});
 	},
 	triggerInput: function(){

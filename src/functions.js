@@ -169,6 +169,65 @@ export default ({
 			destination.push(source[property])
 		}
 		return destination;
-	}
+	},
+
+    /**
+     * 图片上传预览
+     * @param {[type]} source [description]
+     * @param {[type]} target [description]
+     */
+    setImagePreviews: function(source, target){
+        console.log(1)
+        var docObj = document.getElementById(source);
+        var dd = document.getElementById(target);
+        dd.innerHTML = "";
+        var fileList = docObj.files;
+        for (var i = 0; i < fileList.length; i++) {    
+            if (docObj.files && docObj.files[i]) {
+                /*dd.style.width = '80px';
+                dd.style.height = '82px';*/
+                dd.src=window.URL.createObjectURL(docObj.files[i]); 
+            } else {
+                /*dd.style.width = '80px';
+                dd.style.height = '82px';*/
+                dd.src="/static/images/z_add.png"; 
+            }
+        }  
+        if(fileList.length==0){
+            /*dd.style.width = '80px';
+            dd.style.height = '82px';*/
+            dd.src="/static/images/z_add.png"; 
+        }
+        return true;
+    },
+
+    /* 含文件的表单提交 */
+    ajaxFileSubmit : function(elem ,_submitUrl,_isRefrush, _jumpUrl, _parm) {
+        if(_parm==null || _parm == undefined){
+            _parm = {};
+        }
+        $(elem).ajaxSubmit({  
+            type:'post',  
+            cache: false,  
+            url: _submitUrl, 
+            data : _parm,
+            dataType : 'json', //返回值类型 一般设置为json  
+            success : function(data, status) {  
+                if(data.errorNo==200){
+                    if(_isRefrush){
+                        self.location= _jumpUrl;
+                    }
+                    if(this.notBlank(data.errorInfo)){
+                        this.bottomTip(data.errorInfo);    
+                    }
+                } else {
+                    this.bottomTip(data.errorInfo);
+                }
+            },  
+            error : function(data, status, e) {  
+                this.bottomTip("上传失败");
+            }   
+        });
+    },
 })
 

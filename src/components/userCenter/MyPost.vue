@@ -1,25 +1,42 @@
 <template>
-	<div class="row">
-		<navbar ref="navbar" title="我发表的"></navbar>
-		<vueHeadTitle :value="title"></vueHeadTitle>
+	<div>
+		<mt-header fixed title="我发布的">
+	     	<a href="/user/index" slot="left">
+	        	<mt-button icon="back">返回</mt-button>
+	      	</a>
+	      	<mt-button slot="right">
+	      		<a href="javascript:;" class="link-btn">...</a>
+		      </mt-button>
+	    </mt-header>
+		<br><br>
 		
-		<div class="collection">
+		<mt-cell v-for="item in items"  class="padding10" 
+			:key="item.id"
+			:href="'/detail?id=' + item.id "
+			:title="item.content" 
+			:label="item.createTime | formatDate">
+			<span>点击: {{item.clickNum}}</span>
+			<img v-if="item.imgPath" slot="icon" :src="MOBILE_IMG_URL + item.imgPath + '!32!32'" 
+			width="32" height="32">
+		</mt-cell>
+		
+		<!-- <div class="collection">
 			<a class="collection-item" v-for="item in items" :href="'/detail?id=' + item.id ">
 				<span class="badge blue" style="color:#fff;">点击:{{item.clickNum}} 评论:0</span>
 				{{item.title}}
 			</a>			
-		</div>
+		</div> -->
 	
 	</div>
 </template>
 
 <script>
-import navbar from '@/components/include/Navbar'
+import { Header, Cell, Toast } from 'mint-ui'
+import {formatDate} from '@/filter/Filter';
 export default {
   name: 'myPost',
   data () {
     return {
-    	title: '我发表的',
       	items: []
     }
   },
@@ -27,16 +44,20 @@ export default {
 		this.init();
    },
    components:{
-  	navbar
+  	
   },
   methods: {
 	init: function(){
 		var parm = {};
 		parm.pageNo=1;
 		this.$http.get(this.BASE_URL+'/user/myPost', {params: parm}).then(function(res) {
-			this.items = res.data.page.list;
+			if(res.data.page.list!=undefined){
+				this.items = res.data.page.list;	
+			} else {
+				this.items = [];
+			}
 		}, function(res) {
-			Materialize.toast(res.data.error, 3000);
+			this.bottomTip("获取数据异常")
 		});
 	}
   }

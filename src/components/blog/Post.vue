@@ -1,56 +1,53 @@
 <template>
-	<div class="row">
-		<navbar ref="navbar" title="我要发表"></navbar>
+	<div>
+		<mt-header fixed title="发布">
+	        <a href="/user/index" slot="left">
+	            <mt-button icon="back">返回</mt-button>
+	          </a>
+	          <mt-button slot="right">
+	            <a href="javascript:;" class="link-btn">...</a>
+	          </mt-button>
+	      </mt-header>
+	    <br><br>
       
-		<form class="col s12 form" enctype="multipart/form-data" method="POST">
-			
-			<blockquote><h5 class="header">发表图文</h5></blockquote>
-			<input id="username" type="hidden" name="username" class="validate">
-			
-		  <div class="row">
-			<div class="input-field col s12">
-			  <input id="title" type="text" name="title" class="validate">
-			  <label for="title">标题</label>
+		<form class="form padding10" enctype="multipart/form-data" method="POST" action="javascript:;">
+		<h2></h2>
+		  <!-- <div class="row">
+		  			<div class="input-field col s12">
+		  			  <input id="title" type="text" name="title" class="validate">
+		  			  <label for="title">标题</label>
+		  			</div>
+		  </div> -->
+		  
+			<div class="row">
+				<p>内容</p>
+				<textarea id="content" class="materialize-textarea" rows="6" style="width:98%" name="content"></textarea>			 
 			</div>
-		  </div>
 		  
 		  <div class="row">
-			<div class="input-field col s12">
-				<textarea id="content" class="materialize-textarea" name="content"></textarea>
-			  <label for="content">内容</label>
-			</div>
+			<p>选择图片</p>
+			<input type="file" name="attachFile" accept="image/*">
 		  </div>
 		  
-		  <div class="row">
-			<div class="input-field col s12">
-				<div class="file-field input-field">
-				  <div class="btn">
-					<span>上传图片</span>
-					<input type="file" name="attachFile" accept="image/*">
-				  </div>
-				  <div class="file-path-wrapper">
-					<input class="file-path validate" type="text">
-				  </div>
-				</div>
-			</div>
-		  </div>
-		  
-		  <div class="row">
-			<div class="col s12">
-			  <div class="input-field inline">
-				<a class="waves-effect waves-light btn" v-on:click="doPost">发表</a>
-				<a href="/" class="waves-effect waves-light waves-orange btn" style="background-color:#aaa;">首页</a>
-			  </div>
-			</div>
-		  </div>
-		  
+		  <p>
+		  	<mt-button type="primary" @click="doPost">发布</mt-button>
+		  </p>
+
+		  <!-- <div class="row">
+		  			<div class="col s12">
+		  			  <div class="input-field inline">
+		  				<a class="waves-effect waves-light btn" v-on:click="doPost">发表</a>
+		  				<a href="/" class="waves-effect waves-light waves-orange btn" style="background-color:#aaa;">首页</a>
+		  			  </div>
+		  			</div>
+		  </div> -->
 		</form>
 	  
 	</div>
 </template>
 
 <script>
-import navbar from '@/components/include/Navbar'
+import { Header, Cell, Toast } from 'mint-ui'
 export default {
   name: 'Post',
   data () {
@@ -62,28 +59,37 @@ export default {
 	
   },
   components:{
-  	navbar
+  	
   },
   methods: {
 		doPost: function () {
-			var parm = {};
-			jQuery.common.ajaxFileSubmit('.form', this.BASE_URL+'/auth/post', true, '/', parm);
-			/*
-			var parm = jQuery.common.getFormJson('.form');
-			parm.cookie_user = cookie_user;
-			this.$http.post(this.BASE_URL+'/auth/post',parm).then(function(res) {
-				if(res.data.errorNo==200){
-					self.location='/';
-				} else {
-					Materialize.toast(res.data.errorInfo, 3000);
-				}
-            }, function(res) {
-				Materialize.toast(res.data, 3000);
-            });
-			*/
+			var _this = this;
+			$('.form').ajaxSubmit({  
+	            type:'post',  
+	            cache: false,  
+	            url: this.BASE_URL+'/discovery/post', 
+	            dataType : 'json', 
+	            success : function(data, status) {  
+	            	if(data.errorNo==400){
+	            		self.location='/login';
+	            	}
+	                if(data.errorNo==200){
+	                	_this.bottomTip('发布成功');
+	                    self.location= '/user/index';
+	                } else {
+	                	_this.bottomTip(data.errorInfo);
+	                }
+	            },  
+	            error : function(data, status, e) {  
+	                _this.bottomTip("上传失败");
+	            }   
+	        });
+			/*this.ajaxFileSubmit('.form', this.BASE_URL+'/discovery/post', true, '/', parm);*/
 		}
 	}
 }
 </script>
+
+<style type="text/css" scoped="">
 
 </style>
