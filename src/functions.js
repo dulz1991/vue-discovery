@@ -177,7 +177,6 @@ export default ({
      * @param {[type]} target [description]
      */
     setImagePreviews: function(source, target){
-        console.log(1)
         var docObj = document.getElementById(source);
         var dd = document.getElementById(target);
         dd.innerHTML = "";
@@ -202,23 +201,22 @@ export default ({
     },
 
     /* 含文件的表单提交 */
-    ajaxFileSubmit : function(elem ,_submitUrl,_isRefrush, _jumpUrl, _parm) {
-        if(_parm==null || _parm == undefined){
-            _parm = {};
-        }
+    ajaxFileSubmit : function(elem ,_submitUrl,_isRefrush, _jumpUrl) {
         $(elem).ajaxSubmit({  
             type:'post',  
             cache: false,  
             url: _submitUrl, 
-            data : _parm,
             dataType : 'json', //返回值类型 一般设置为json  
             success : function(data, status) {  
                 if(data.errorNo==200){
                     if(_isRefrush){
                         self.location= _jumpUrl;
+                        return;
                     }
                     if(this.notBlank(data.errorInfo)){
                         this.bottomTip(data.errorInfo);    
+                    } else {
+                        this.bottomTip("上传成功");    
                     }
                 } else {
                     this.bottomTip(data.errorInfo);

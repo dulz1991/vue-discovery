@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<mt-header fixed title="上传头像">
-	        <a href="/user/index" slot="left">
+	        <a href="/user/info" slot="left">
 	            <mt-button icon="back">返回</mt-button>
 	          </a>
 	          <mt-button slot="right">
@@ -10,7 +10,7 @@
 	      </mt-header>
 	    <br><br><br>
 			
-		<form class="form" action="javascripi:;">
+		<form class="form" action="javascript:;">
 			<div class="row">
 	          <div class="col s12">
 	            <div class="input-field inline">
@@ -25,7 +25,7 @@
 			<div class="row">
 	    		<div style="margin:10px; width:200px;">
 					<input type="file" style="display:none;" name="attachFile" id="doc" multiple="multiple"
-					 onchange="setImagePreviews('doc','dd');" accept="image/*" />
+					 @change="selectImg('doc','dd')" accept="image/*" />
 					<div>
 						<img width="200px" height="200px" id="dd" src="/static/images/z_add.png">
 					</div>
@@ -56,8 +56,8 @@ export default {
 		
 	},
 	doSubmit: function(){
-		var formData = new FormData($(".form")[0]); 
-		/*formData.append("cookie_user", jQuery.common.getCookie(this.COOKIE_USERNAME));*/
+		this.ajaxFileSubmit('.form', this.BASE_URL+'/user/uploadAvatar', true, '/user/info');
+		/*var formData = new FormData($(".form")[0]); 
 		console.log(formData);
 		this.$http.post(this.BASE_URL+'/user/uploadAvatar',formData).then(function(res) {
 		    if(res.data.errorNo==200){
@@ -68,10 +68,13 @@ export default {
 		    }
 		  }, function(res) {
 		    this.bottomTip("获取数据异常")
-		});
+		});*/
 	},
 	triggerInput: function(){
 		$('input[name="attachFile"]').trigger('click');
+	},
+	selectImg: function(source, target){
+		this.setImagePreviews(source, target);
 	}
   }
 }

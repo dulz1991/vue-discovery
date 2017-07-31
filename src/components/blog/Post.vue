@@ -26,7 +26,19 @@
 		  
 		  <div class="row">
 			<p>选择图片</p>
-			<input type="file" name="attachFile" accept="image/*">
+			<!-- <input type="file" name="attachFile" accept="image/*"> -->
+
+			<div class="row">
+	    		<div style="margin:10px; width:200px;">
+					<input type="file" style="display:none;" name="attachFile" id="doc" multiple="multiple"
+					 @change="selectImg('doc','dd')" accept="image/*" />
+					<div>
+						<img width="200px" height="200px" id="dd" src="/static/images/z_add.png" 
+						@click="triggerInput">
+					</div>
+				</div>
+	    	</div>
+
 		  </div>
 		  
 		  <p>
@@ -63,7 +75,8 @@ export default {
   },
   methods: {
 		doPost: function () {
-			var _this = this;
+			this.ajaxFileSubmit('.form', this.BASE_URL+'/discovery/post', true, '/');
+			/*var _this = this;
 			$('.form').ajaxSubmit({  
 	            type:'post',  
 	            cache: false,  
@@ -83,8 +96,13 @@ export default {
 	            error : function(data, status, e) {  
 	                _this.bottomTip("上传失败");
 	            }   
-	        });
-			/*this.ajaxFileSubmit('.form', this.BASE_URL+'/discovery/post', true, '/', parm);*/
+	        });*/
+		},
+		triggerInput: function(){
+			$('input[name="attachFile"]').trigger('click');
+		},
+		selectImg: function(source, target){
+			this.setImagePreviews(source, target);
 		}
 	}
 }
