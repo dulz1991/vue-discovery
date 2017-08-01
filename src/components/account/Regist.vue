@@ -55,7 +55,7 @@ export default {
 			var parm = {};
       parm.username = this.username;
       parm.password = this.password;
-      parm.mobile = this.mobile;
+      parm.phone = this.mobile;
 			this.$http.post(this.BASE_URL+'/account/doRegist',parm).then(function(res) {
 				if(res.data.errorNo==200){
           this.bottomTip(res.data.tip);

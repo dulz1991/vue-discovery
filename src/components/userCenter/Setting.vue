@@ -45,7 +45,7 @@ export default {
 	},
 	doLogout: function(){
 		console.log(1)
-		this.$http.get(this.BASE_URL+'/account/logout').then(function(res) {
+		this.$http.get(this.BASE_URL+'/account/doLogout').then(function(res) {
 			if(res.data.errorNo==200){
 				self.location='/';
 			} else {
