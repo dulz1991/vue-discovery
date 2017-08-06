@@ -2,15 +2,7 @@
 
 <div>
 
-  <mt-header fixed title="">
-      <a href="javascript:;" slot="left" @click="closeCommentPage">
-        <mt-button icon="back">返回</mt-button>
-      </a>
-      <!-- <mt-button v-if="!isLogin" slot="right">
-        <a href="/login" class="link-btn">登录</a>  
-      </mt-button> -->
-  </mt-header>
-  <br><br>
+  <div class="closeBtn" @click="closeCommentPage">x</div>
 
   <div style="padding:10px;"v-if="hasComment">
     <div>
@@ -119,6 +111,7 @@ export default {
         if(res.data.errorNo==400){
           self.location='/login?redirectUrl='+window.location.href;
         } else if(res.data.errorNo==200){
+          this.commentContent = "";
           this.init();
         } else {
           this.midTip(res.data.errorInfo);
@@ -133,13 +126,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#commentList{background-color: #fff;padding:2px; height: 100%;}
+#commentList{background-color: #fff;padding:2px; height: 100%;margin-bottom: 20px;}
 #commentList ul{list-style:none;}
-#commentList ul li{margin-bottom: 20px;}
+#commentList ul li{margin-bottom: 10px;}
 
 .mint-tab-item{padding:0;}
 #comment-bar{background-color: #fff;}
 #comment-bar span{margin-left:10px;}
 #comment-bar img{padding:10px 5px 0 5px;}
 #comment-bar input{line-height: 32px;border:0px;width: 60%;position: relative;top:-6px;}
+
+.closeBtn{border:1px solid #f00; width:32px;height:32px;float: right;margin:10px 10px 0 0;border-radius:16px;
+font-size: 22px; cursor: pointer;text-align: center;color: #f00;}
 </style>

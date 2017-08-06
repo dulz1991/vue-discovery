@@ -1,14 +1,6 @@
 <template>
 <div>
-	<mt-header fixed title="">
-      	<a href="/" slot="left">
-        	<mt-button icon="back">返回</mt-button>
-      	</a>
-      	<mt-button v-if="!isLogin" slot="right">
-      		<a href="/login" class="link-btn">登录</a>
-      	</mt-button>
-    </mt-header>
-    <br><br>
+	<navbar title="" showBack="true" backUrl="/"></navbar>
 
     <div class="item">
 		<div>
@@ -17,8 +9,8 @@
 		</div>
 		<div>{{item.content}}</div>
 		<div>
-			<img v-lazy="BASE_IMG_URL+item.imagePath" v-if="item.imagePath" width="98%">
-			<!-- <img :src="BASE_IMG_URL+item.imagePath" v-if="item.imagePath" width="98%"> -->
+			<img v-lazy="BASE_IMG_URL+item.imagePath" v-if="item.imagePath" width="98%" @click="clickImg">
+			<big-img v-if="showImg" @viewIt="viewIt" :imgSrc="BASE_IMG_URL+item.imagePath"></big-img>
 		</div>
 		<div class="footer">
 			<span>{{item.createTimeStr}} | </span>
@@ -32,17 +24,25 @@
 	<p style="padding:0;margin:0 0 5px 10px;">评论 {{item.commentCount}}</p>
 	<div id="commentList">
 		<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-			<li v-for="c in commentList" style="border-bottom:1px solid #eee;padding-bottom:5px;">
+			<li v-for="c in commentList">
 				<div>
 					<img :src="BASE_IMG_URL+c.fromAvatar" class="avatar">
-					<span class="item-head">{{c.fromName}}</span>
+					<div class="item-head">
+						<span>{{c.fromName}}</span>
+						<br>
+						<span style="color:#aaa;">{{c.createTimeStr}}</span>
+					</div>
 				</div>
 				<div @click="commentForComment(c.id)">{{c.messageContent}}</div>
-				<ul>
+				<ul style="margin-top:10px;">
 					<li  v-for="d in c.commentList">
 						<div>
 							<img :src="BASE_IMG_URL+d.fromAvatar" class="avatar">
-							<span class="item-head">{{d.fromName}}</span>
+							<div class="item-head">
+								<span>{{d.fromName}}</span>
+								<br>
+								<span style="color:#aaa;">{{d.createTimeStr}}</span>
+							</div>
 						</div>
 						<div>{{d.messageContent}}</div>	
 					</li>
@@ -82,6 +82,8 @@
 
 <script>
 import { Header, Toast, Tabbar, TabItem, Field, Lazyload, InfiniteScroll, Popup } from 'mint-ui'
+import navbar from '@/components/include/Navbar'
+import viewImg from '@/components/include/ViewImg'
 import commentPage from '@/components/include/CommentPage'
 export default {
   name: 'Detail',
@@ -95,7 +97,9 @@ export default {
 	  	commentContent:'', //评论内容
 	  	hasCollected: false, //是否已收藏
 	  	
-	  	popupVisible: false
+	  	popupVisible: false,
+
+	  	showImg: false
     }
   },
   mounted: function () {
@@ -105,7 +109,9 @@ export default {
 	//this.getCommentList();
   },
   components:{
-  	commentPage
+  	navbar,
+  	commentPage,
+  	'big-img':viewImg
   },
   methods: {
 		getDetail: function () {
@@ -140,15 +146,16 @@ export default {
             });
 		},
 		loadMore: function() {
-			if(!hasComment){
+			if(!this.hasComment){
 				return;
 			}
 			var parm = {};
 			parm.type='down';
 			parm.discoveryId = this.item.id;
+			parm.id=this.commentList[this.commentList.length-1].id;
 			this.$http.get(this.BASE_URL+'/getCommentList', {params: parm}).then(function(res) {
 				if(res.data.list != undefined){
-					this.commentList = res.data.list;	
+					this.commentList = this.appendJson(res.data.list, this.commentList);	
 				}
 				if(res.data.list != undefined && res.data.list.length>=res.data.pageSize){
 					this.hasComment = true;
@@ -200,7 +207,9 @@ export default {
 				if(res.data.errorNo==400){
 					self.location='/login?redirectUrl='+window.location.href;
 				} else if(res.data.errorNo==200){
+					this.commentContent = "";
 					this.getCommentList();
+					this.bottomTip("评论成功");
 				} else {
 					this.midTip(res.data.errorInfo);
 				}
@@ -215,34 +224,14 @@ export default {
 		},
 		closeCommentPage: function(arg) {
 			this.popupVisible=arg;
-		}
-		/*
-		showModal: function(obj){
-			this.commentId =$(obj.target).attr('commentId');
-			this.toId = $(obj.target).attr('fromId');
-			this.replyToName = $(obj.target).attr('fromName');
-			this.discoveryId = $('input[name="hiddenId"]').val();
-			$('#modal1').modal('open');
+			this.getCommentList();
 		},
-		commentSubmit: function(){
-			var parm = jQuery.common.getFormJson('.replyForm');
-			parm.cookie_user = jQuery.common.getCookie(this.COOKIE_USERNAME);
-			var _this = this;
-			this.$http.post(this.BASE_URL+'/auth/doCommentForComment', parm).then(function(res) {
-				if(res.data.errorNo==200){
-					var _commentId = parm.commentId;
-					var _username = jQuery.common.getCookie(this.COOKIE_USERNAME);
-					var _html = '';
-					_html += '<div>'+_username+'： '+parm.messageContent+'</div>';
-					$("#commentItem"+_commentId).find('.commentArea').append(_html);
-				} else {
-					Materialize.toast(res.data.errorInfo, 3000);
-				}
-		      }, function(res) {
-					Materialize.toast(res.data.error, 3000);
-		      });
-		},
-		*/
+		viewIt: function(){
+            this.showImg = false;
+        },
+        clickImg: function(){
+			this.showImg = true;
+        }
 	}
 }
 
@@ -250,12 +239,14 @@ export default {
 <style scoped>
 .item{background-color: #fff;padding:10px;margin-bottom:1px;}
 .item div{padding:6px 2px;}
-.item .item-head{position:relative;top:-12px;}
 .item .footer{color: #aaa;}
 
 #commentList{background-color: #fff;padding:2px;}
-#commentList ul{list-style:none;margin-left:-25px;}
-#commentList ul li{margin-bottom: 20px;}
+#commentList>ul{list-style:none;margin-left:-25px;}
+#commentList>ul>li{margin-bottom: 20px;border-bottom:1px solid #eee;padding-bottom:5px;}
+#commentList>ul>li .item-head{position:relative;display: inline-block;}
+#commentList>ul>li>ul{list-style:none;}
+#commentList>ul>li>ul>li{margin-bottom:10px;}
 
 .commentArea{background-color:#eee;}
 .commentArea div{padding:2px 15px;}

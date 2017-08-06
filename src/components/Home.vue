@@ -1,26 +1,20 @@
 <template>
 
   <div>
-	<mt-header fixed title="首页">
-      <!-- <a href="/" slot="left">
-        <mt-button icon="back">返回</mt-button>
-      </a> -->
-      <mt-button v-if="!isLogin" slot="right">
-      	<a href="/login" class="link-btn">登录</a>
-      </mt-button>
-    </mt-header>
-	<br><br>
+	<navbar title=""></navbar>
+
 	<mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" 
 		@top-status-change="handleTopChange" @bottom-status-change="handleBottomChange"
 	 	ref="loadmore">
-		<div v-for="item in items" class="item" @click="viewDetail(item.id)">
+		<div v-for="item in items" class="item">
 			<div>
 				<img :src="BASE_IMG_URL+item.avatar" class="avatar">
 				<span class="item-head">{{item.username}}</span>
 			</div>
-			<div>{{item.content}}</div>
-			<div><img v-if="item.hasImg" :src="MOBILE_IMG_URL+item.imagePath+'!120!120'" class="imgList"></div>
-			<div class="footer">
+			<div @click="viewDetail(item.id)">{{item.content}}</div>
+			<div @click="viewDetail(item.id)"><img v-if="item.hasImg" :src="MOBILE_IMG_URL+item.imagePath+'!120!120'" class="imgList"></div>
+			<div class="footer" @click="viewDetail(item.id)">
+				<span>{{item.createTimeStr}}</span>
 				<span>评论: {{item.commentCount}}</span>
 				<span>收藏: {{item.collectionCount}}</span>
 			</div>
@@ -43,6 +37,7 @@
 
 <script>
 import { Loadmore, Header, Lazyload,Swipe, SwipeItem, Spinner, Indicator } from 'mint-ui'
+import navbar from '@/components/include/Navbar'
 import tabbar from '@/components/include/Tabbar'
 export default {
 	name: 'app',
@@ -56,7 +51,8 @@ export default {
   	},
   	components:{
   		loadmore: Loadmore,
-  		tabbar
+  		tabbar,
+  		navbar
   	},
   	mounted: function () {
   		document.title='首页';
