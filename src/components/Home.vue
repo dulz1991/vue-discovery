@@ -30,7 +30,7 @@
 	  	</div>
 	</mt-loadmore>
 	
-	<tabbar></tabbar>
+	<!-- <tabbar></tabbar> -->
 		
   </div>
 </template>

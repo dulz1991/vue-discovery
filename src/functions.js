@@ -202,6 +202,7 @@ export default ({
 
     /* 含文件的表单提交 */
     ajaxFileSubmit : function(elem ,_submitUrl,_isRefrush, _jumpUrl) {
+        var _this = this;
         $(elem).ajaxSubmit({  
             type:'post',  
             cache: false,  
@@ -213,17 +214,17 @@ export default ({
                         self.location= _jumpUrl;
                         return;
                     }
-                    if(this.notBlank(data.errorInfo)){
-                        this.bottomTip(data.errorInfo);    
+                    if(_this.notBlank(data.errorInfo)){
+                        _this.bottomTip(data.errorInfo);    
                     } else {
-                        this.bottomTip("上传成功");    
+                        _this.bottomTip("上传成功");    
                     }
                 } else {
-                    this.bottomTip(data.errorInfo);
+                    _this.bottomTip(data.errorInfo);
                 }
             },  
             error : function(data, status, e) {  
-                this.bottomTip("上传失败");
+                _this.bottomTip("上传失败");
             }   
         });
     },

@@ -1,14 +1,6 @@
 <template>
 	<div>
-		<mt-header fixed title="我收藏的">
-	     	<a href="/user/index" slot="left">
-	        	<mt-button icon="back">返回</mt-button>
-	      	</a>
-	      	<mt-button slot="right">
-	      		<a href="javascript:;" class="link-btn">...</a>
-		      </mt-button>
-	    </mt-header>
-		<br><br>
+		<navbar title="我收藏的" showBack="true" backUrl="/user/index"></navbar>
 		
 		<mt-cell v-for="item in items"  class="padding10" 
 			:key="item.discoveryId"
@@ -37,6 +29,7 @@
 <script>
 import { Header, Cell,Toast } from 'mint-ui'
 import {formatDate} from '@/filter/Filter';
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'myPost',
   data () {
@@ -47,7 +40,7 @@ export default {
     }
   },
   components:{
-  	
+  	navbar
   },
    mounted: function () {
 		this.init();
@@ -56,6 +49,7 @@ export default {
 	init: function(){
 		var parm = {};
 		parm.pageNo=1;
+		parm.pageSize=-1;
 		this.$http.get(this.BASE_URL+'/user/myCollection', {params: parm}).then(function(res) {
 			this.items = res.data.list;
 			if(this.items.length>0){

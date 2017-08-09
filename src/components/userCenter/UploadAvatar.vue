@@ -1,15 +1,8 @@
 <template>
 	<div>
-		<mt-header fixed title="上传头像">
-	        <a href="/user/info" slot="left">
-	            <mt-button icon="back">返回</mt-button>
-	          </a>
-	          <mt-button slot="right">
-	            <a href="javascript:;" class="link-btn">...</a>
-	          </mt-button>
-	      </mt-header>
-	    <br><br><br>
-			
+		<navbar title="上传头像" showBack="true" backUrl="/user/info"></navbar>
+		
+		<br>
 		<form class="form" action="javascript:;">
 			<div class="row">
 	          <div class="col s12">
@@ -38,6 +31,7 @@
 
 <script>
 import { Header, Cell, Toast } from 'mint-ui'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'uploadAvatar',
   data () {
@@ -49,7 +43,7 @@ export default {
 	this.init();
   },
   components:{
-  	
+  	navbar
   },
   methods: {
 	init: function(){

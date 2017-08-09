@@ -1,14 +1,6 @@
 <template>
 	<div >
-		<mt-header fixed title="我评论的">
-	     	<a href="/user/index" slot="left">
-	        	<mt-button icon="back">返回</mt-button>
-	      	</a>
-	      	<mt-button slot="right">
-	      		<a href="javascript:;" class="link-btn">...</a>
-		      </mt-button>
-	    </mt-header>
-		<br><br>
+		<navbar title="我评论的" showBack="true" backUrl="/user/index"></navbar>
 
 		<mt-cell v-for="item in items"  class="padding10" 
 			:key="item.id"
@@ -33,6 +25,7 @@
 <script>
 import { Header, Cell,Toast } from 'mint-ui'
 import {formatDate} from '@/filter/Filter';
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'myComment',
   data () {
@@ -44,12 +37,13 @@ export default {
 		this.init();
    },
    components:{
-  	
+  	navbar
   },
   methods: {
 	init: function(){
 		var parm = {};
 		parm.pageNo=1;
+		parm.pageSize=-1;
 		this.$http.get(this.BASE_URL+'/user/myComment', {params: parm}).then(function(res) {
 			if(res.data.page.list!=undefined){
 				this.items = res.data.page.list;	
@@ -59,7 +53,29 @@ export default {
 		}, function(res) {
 			this.bottomTip("获取数据异常")
 		});
-	}
+	},
+	loadMore: function() {
+			if(!this.hasComment){
+				return;
+			}
+			var parm = {};
+			parm.type='down';
+			parm.discoveryId = this.item.id;
+			parm.id=this.commentList[this.commentList.length-1].id;
+			this.$http.get(this.BASE_URL+'/getCommentList', {params: parm}).then(function(res) {
+				if(res.data.list != undefined){
+					this.commentList = this.appendJson(res.data.list, this.commentList);	
+				}
+				if(res.data.list != undefined && res.data.list.length>=res.data.pageSize){
+					this.hasComment = true;
+				} else {
+					this.hasComment = false;
+				}
+            }, function(res) {
+				this.bottomTip(res.data.error);
+            });
+		}
+		
   }
 }
 </script>

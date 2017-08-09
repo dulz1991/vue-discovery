@@ -1,19 +1,11 @@
 <template>
 	<div>
-		<mt-header fixed title="设置">
-        	<a href="/user/index" slot="left">
-            	<mt-button icon="back">返回</mt-button>
-          	</a>
-          	<mt-button slot="right">
-            	<a href="javascript:;" class="link-btn">...</a>
-          	</mt-button>
-      	</mt-header>
-    	<br><br>
+		<navbar title="设置" showBack="true" backUrl="/user/index"></navbar>
 
 		<br>
-		<mt-cell title="关于本站" value="" @click.native="jumpUrl('/about')"></mt-cell>
-		<mt-cell title="帮助中心" value="" @click.native="jumpUrl('/help')"></mt-cell>
-    	<mt-cell title="修改密码" value="" @click.native="jumpUrl('/user/changepwd')"></mt-cell>
+		<mt-cell is-link title="关于本站" value="" @click.native="jumpUrl('/about')"></mt-cell>
+		<!-- <mt-cell title="帮助中心" value="" @click.native="jumpUrl('/help')"></mt-cell> -->
+    	<mt-cell is-link title="修改密码" value="" @click.native="jumpUrl('/user/changepwd')"></mt-cell>
     	<br>
     	<mt-cell title="退出" value="" @click.native="doLogout"></mt-cell>
 
@@ -26,6 +18,7 @@
 
 <script>
 import { Header, Cell, Toast } from 'mint-ui'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'setting',
   data () {
@@ -38,7 +31,7 @@ export default {
 		this.init();
    },
    components:{
-  	
+  	navbar
   },
   methods: {
 	init: function(){

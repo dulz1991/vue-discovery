@@ -1,15 +1,7 @@
 <template>
 	<div>
-		<mt-header fixed title="关于本站">
-        	<a href="/user/set" slot="left">
-            	<mt-button icon="back">返回</mt-button>
-          	</a>
-          	<mt-button slot="right">
-            	<a href="javascript:;" class="link-btn">...</a>
-          	</mt-button>
-      	</mt-header>
-    	<br><br>
-
+    <navbar title="关于本站" showBack="true" backUrl="/user/set"></navbar>
+		
 		<div class="padding10">
 			<p>本站用于交友学习，抒发情怀（发发牢骚）。或者发表各种有意思的事情。</p>
 			<p>大家对本站有任何意见或建议，欢迎批评指教。</p>
@@ -24,6 +16,7 @@
 
 <script>
 import { Header, Cell, Toast } from 'mint-ui'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'about',
   data () {
@@ -32,7 +25,7 @@ export default {
     }
   },
   components:{
-  	
+  	navbar
   },
   mounted: function () {
 	

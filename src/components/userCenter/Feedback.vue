@@ -1,14 +1,6 @@
 <template>
 	<div>
-		<mt-header fixed title="反馈">
-        <a href="/user/index" slot="left">
-            <mt-button icon="back">返回</mt-button>
-          </a>
-          <mt-button slot="right">
-            <a href="javascript:;" class="link-btn">...</a>
-          </mt-button>
-      </mt-header>
-    <br><br>
+    <navbar title="反馈" showBack="true" backUrl="/user/index"></navbar>
     
     <div class="padding10">
       <h4>暂时也没有什么好反馈的...</h4>
@@ -20,6 +12,7 @@
 
 <script>
 import { Header, Cell } from 'mint-ui'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'feedback',
   data () {
@@ -30,7 +23,7 @@ export default {
    mounted: function () {
    },
    components:{
-  	
+  	navbar
   },
   methods: {
   }

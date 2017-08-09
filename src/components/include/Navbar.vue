@@ -3,7 +3,7 @@
         <mt-header fixed :title="title">
           
             <a href="/" slot="left" v-if="showHome">
-              <mt-button icon="back">首页</mt-button>
+              <mt-button icon="home"><i class="fa fa-home fa-faw"></i>首页</mt-button>
             </a>
 
             <a :href="backUrl" slot="left" v-if="showBack">

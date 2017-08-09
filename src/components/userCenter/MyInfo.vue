@@ -1,14 +1,6 @@
 <template>
 	<div>
-		<mt-header fixed title="个人信息">
-        <a href="/user/index" slot="left">
-            <mt-button icon="back">返回</mt-button>
-          </a>
-          <mt-button slot="right">
-            <a href="javascript:;" class="link-btn">...</a>
-          </mt-button>
-      </mt-header>
-    <br><br>
+      <navbar title="个人信息" showBack="true" backUrl="/user/index"></navbar>
   
     <br>
     <mt-cell is-link title="" @click.native="jumpUrl('/user/uploadAvatar')">
@@ -22,6 +14,7 @@
 
 <script>
 import { Header, Cell, Toast } from 'mint-ui'
+import navbar from '@/components/include/Navbar'
 export default {
   name: 'myInfo',
   data () {
@@ -32,6 +25,9 @@ export default {
   },
   mounted: function () {
 		this.init();
+  },
+  components:{
+    navbar
   },
   methods: {
 	 init: function(){
